@@ -1,61 +1,32 @@
-# Harsh Vardhan Dubey — Portfolio
+# React + TypeScript + Vite
 
-An RPG "character sheet" themed portfolio. Pure HTML/CSS/JS — no build step, so it deploys straight to GitHub Pages.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-## Sections
+Currently, two official plugins are available:
 
-- **Character** — hero player card + about
-- **Journey** — timeline of education, roles, and milestones
-- **Skill Tree** — skills grouped by category
-- **Quest Log** — projects (Viralyst, Grammarly for Hindi) with real GitHub links
-- **Achievements Unlocked** — GATE CS 2025, dept rank, Google Cloud Ready, AICTE program
-- **Snapshots** — photo gallery (placeholder frames, ready for your photos)
-- **Connect** — GitHub, LinkedIn, email, FUSS Group
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## 1. Add your photos to the gallery
+## React Compiler
 
-Drop images into `assets/gallery/`, then in `index.html` find the `#snapshots` section and swap each:
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-```html
-<span class="polaroid-frame"><span class="polaroid-icon">📷</span></span>
+## Expanding the Oxlint configuration
+
+If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+
+```json
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "oxc"],
+  "options": {
+    "typeAware": true
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  }
+}
 ```
 
-for:
-
-```html
-<span class="polaroid-frame"><img src="assets/gallery/your-photo.jpg" alt="Description"></span>
-```
-
-Update the caption text under each one too. Full instructions are also in `assets/gallery/README.txt`.
-
-## 2. Other things you may want to tweak
-
-- **Player card stat bars** (`#character`) — the four proficiency bars are a stylistic touch; adjust the `style="--fill:XX%"` values in `index.html` if you want different weighting.
-- **Class rotator** — edit the `CLASSES` array at the top of `js/script.js`.
-- **Resume link** — if you want a "Download résumé" button, add your PDF to `assets/` and link it from the hero or footer.
-- **Colors/fonts** — CSS variables live at the top of `css/style.css` (`:root`).
-
-## 3. Preview locally
-
-Just open `index.html` in a browser. No server required.
-
-## 4. Deploy to GitHub Pages
-
-1. Create a repo on GitHub — name it `yourusername.github.io` for a root-domain URL, or anything else for a `/repo-name/` path.
-2. Push this project:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial portfolio"
-   git branch -M main
-   git remote add origin https://github.com/yourusername/yourusername.github.io.git
-   git push -u origin main
-   ```
-3. On GitHub: **Settings → Pages** → Source: `Deploy from a branch` → branch `main`, folder `/ (root)` → Save.
-4. Visit `https://yourusername.github.io` (or `.../repo-name/`) after a minute or two.
-
-## 5. Optional next steps
-
-- Add a custom domain via **Settings → Pages → Custom domain**.
-- Add a résumé download button.
-- Add more "side quests" (extra small project entries) following the existing `.side-quest` pattern in `#quests`.
+See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
