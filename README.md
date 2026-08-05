@@ -1,32 +1,54 @@
-# React + TypeScript + Vite
+# Harsh Vardhan Dubey — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React + TypeScript + Tailwind rebuild of the personal portfolio. Built to reproduce the
+**design language and interaction patterns** of shubhamgl.com (scroll-triggered reveals,
+an interactive tab-driven timeline, link-tile contact section, scroll-spy nav) with an
+entirely original visual identity and all-new content — no source code, copy, or assets
+from the reference site.
 
-Currently, two official plugins are available:
+## Run it
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Then open the printed local URL. `npm run build` produces a static `dist/` folder you can
+deploy anywhere (GitHub Pages, Vercel, Netlify, etc).
+
+## Design system
+
+**Concept.** A "spec sheet / field log" identity — instrument-panel brass on deep indigo —
+fitted to a systems & NLP researcher's actual work, rather than the reference's fantasy-quest
+skin.
+
+- **Color** — `ink` (#0B0F1A background family), `brass` (#D9A54A, primary accent),
+  `signal` (#6FCF97, status indicator), `wire` (#6C93C7, links). One accent used sparingly,
+  everything else neutral, per `tailwind.config.ts`.
+- **Type** — Fraunces (display serif, used only for names/headings), IBM Plex Sans (body),
+  IBM Plex Mono (labels, dates, tags, nav) — a three-tier system distinct from the reference's
+  faces.
+- **Spacing/layout** — single centered content rail (`max-w-rail` = 960px), ~100px vertical
+  rhythm between sections, dense card padding.
+- **Signature interaction** — the hero's role line is a typewriter effect cycling through
+  three descriptors, and the Field Log section uses real click-to-expand tabs (state in
+  `Timeline.tsx`) rather than a static list.
+- **Motion** — `Reveal.tsx` wraps sections in a `framer-motion` `whileInView` fade/rise;
+  project cards get a subtle cursor-tracked 3D tilt; a scroll progress bar runs along the
+  top edge.
+- **Accessibility** — visible focus rings (`index.css`), `prefers-reduced-motion` respected,
+  semantic headings throughout.
+
+## Structure
+
+```
+src/
+  components/   Nav, Hero, Profile, Timeline, Work, Gallery, Contact, Reveal, ScrollProgress
+  hooks/        useScrollProgress, useActiveSection, useTypewriter
+  data/         content.ts — all real content lives here, typed via types.ts
+public/
+  profile.jpg, resume.pdf
+```
+
+To update content (experience, projects, skills, links), edit `src/data/content.ts` only —
+no component changes needed for new entries.
