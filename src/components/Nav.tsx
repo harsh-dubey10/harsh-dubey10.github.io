@@ -1,9 +1,9 @@
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { useActiveSection } from '../hooks/useActiveSection'
-import { useScrolled } from '../hooks/useScrolled'
 
 const SECTIONS = [
   { id: 'profile', label: 'About' },
-  { id: 'achievements', label: 'Trophies' },
   { id: 'timeline', label: 'Journey' },
   { id: 'work', label: 'Quests' },
   { id: 'gallery', label: 'Gallery' },
@@ -12,43 +12,50 @@ const SECTIONS = [
 
 export default function Nav() {
   const active = useActiveSection(SECTIONS.map((s) => s.id))
-  const scrolled = useScrolled(24)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 24)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
-    <header
-      className={`sticky top-0 z-40 border-b transition-colors duration-300 ${
-        scrolled
-          ? 'border-ink-borderSoft bg-ink/75 backdrop-blur-md'
-          : 'border-transparent bg-transparent backdrop-blur-0'
-      }`}
-    >
-      <div className="mx-auto flex max-w-rail items-center justify-between px-7 py-4">
-        <a
-          href="#top"
-          className="shrink-0 pr-6 font-morva text-[22px] tracking-wide text-brass transition-colors hover:text-text sm:text-[26px]"
-        >
-          Harsh
-        </a>
-
-        <nav className="no-scrollbar flex gap-7 overflow-x-auto font-mono text-[12.5px] tracking-wide">
-          {SECTIONS.map((s) => (
-            <a
-              key={s.id}
-              href={`#${s.id}`}
-              className={`relative pb-1 uppercase transition-colors ${
-                active === s.id ? 'text-brass' : 'text-text-dim hover:text-brass'
-              }`}
-            >
-              {s.label}
-              <span
-                className={`absolute -bottom-px left-0 h-px bg-brass transition-all duration-300 ${
-                  active === s.id ? 'right-0' : 'right-full'
+    <div className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4">
+      <motion.nav
+        layout
+        transition={{ type: 'spring', stiffness: 320, damping: 32 }}
+        className={`pointer-events-auto flex items-center rounded-full border border-ink-border/70 bg-ink/70 shadow-[0_8px_30px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-[padding,margin] duration-300 ${
+          scrolled ? 'mt-3 px-1.5 py-1.5' : 'mt-5 px-2 py-2'
+        }`}
+      >
+        <div className="no-scrollbar flex items-center gap-1 overflow-x-auto">
+          {SECTIONS.map((s) => {
+            const isActive = active === s.id
+            return (
+              <a
+                key={s.id}
+                href={`#${s.id}`}
+                className={`relative shrink-0 whitespace-nowrap rounded-full px-4 py-2 font-mono text-[11.5px] uppercase tracking-wide transition-colors ${
+                  isActive ? 'text-ink' : 'text-text-dim hover:text-text'
                 }`}
-              />
-            </a>
-          ))}
-        </nav>
-      </div>
-    </header>
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active-pill"
+                    className="absolute inset-0 rounded-full bg-brass"
+                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                  />
+                )}
+                <span className="relative z-10">{s.label}</span>
+              </a>
+            )
+          })}
+        </div>
+      </motion.nav>
+    </div>
   )
 }
