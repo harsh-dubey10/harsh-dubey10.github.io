@@ -47,10 +47,15 @@ export default {
           '0%, 100%': { opacity: '1', transform: 'scale(1)' },
           '50%': { opacity: '0.4', transform: 'scale(1.6)' },
         },
+        moonGlow: {
+          '0%, 100%': { filter: 'brightness(1)', transform: 'scale(1)' },
+          '50%': { filter: 'brightness(1.08)', transform: 'scale(1.02)' },
+        },
       },
       animation: {
         blink: 'blink 1s step-end infinite',
         pulseDot: 'pulseDot 1.8s ease-in-out infinite',
+        moonGlow: 'moonGlow 6s ease-in-out infinite',
       },
     },
   },
