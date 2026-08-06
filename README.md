@@ -1,11 +1,6 @@
 # Harsh Vardhan Dubey — Portfolio
 
-React + TypeScript + Tailwind rebuild of the personal portfolio. Built to reproduce the
-**design language and interaction patterns** of shubhamgl.com (scroll-triggered reveals,
-an interactive tab-driven timeline, link-tile contact section, scroll-spy nav) with an
-entirely original visual identity and all-new content — no source code, copy, or assets
-from the reference site.
-
+React + TypeScript + Tailwind rebuild of the personal portfolio. 
 ## Run it
 
 ```bash
