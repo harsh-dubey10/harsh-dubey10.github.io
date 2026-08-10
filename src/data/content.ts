@@ -33,6 +33,9 @@ export const education: EducationEntry[] = [
 ]
 
 export const skills: string[] = [
+  'Formal Methods',
+  'Systems',
+  'Web Security',
   'C++',
   'Python',
   'Go',
@@ -47,8 +50,6 @@ export const skills: string[] = [
   'MySQL',
   'Docker',
   'Git',
-  'NLP',
-  'LLMs',
 ]
 
 export const timeline: TimelineEntry[] = [
@@ -82,8 +83,8 @@ export const timeline: TimelineEntry[] = [
     period: '2025 — Present',
     level: 3,
     description:
-      'Researching and building within the FUSS Group, working across systems, NLP, and AI-driven tooling.',
-    tags: ['Research', 'NLP', 'Systems'],
+      'Researching within the FUSS Group at IIT Gandhinagar under Prof. Abhishek Bichhawat, focusing on formal methods, systems performance, web security, and compilers.',
+    tags: ['Formal Methods', 'Systems', 'Security', 'Compilers'],
     current: true,
   },
 ]
