@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::selection {
+  background: #d9a54a;
+  color: #0b0f1a;
+}
+
+/* Visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #d9a54a;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  height: 0;
+  width: 0;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Torch flame animations matching shubhamgl.com about section */
+@keyframes torchFlame1 {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.95; }
+  20% { transform: scale(1.08, 0.94) rotate(-3deg); opacity: 0.85; }
+  40% { transform: scale(0.95, 1.06) rotate(3deg); opacity: 1; }
+  60% { transform: scale(1.05, 0.97) rotate(-1deg); opacity: 0.9; }
+  80% { transform: scale(0.98, 1.03) rotate(2deg); opacity: 0.95; }
+}
+
+@keyframes torchFlame2 {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
+  25% { transform: scale(0.94, 1.05) rotate(2deg); opacity: 1; }
+  50% { transform: scale(1.06, 0.95) rotate(-2deg); opacity: 0.8; }
+  75% { transform: scale(0.97, 1.03) rotate(1deg); opacity: 0.95; }
+}
+
+@keyframes torchGlow {
+  0%, 100% { opacity: 0.14; transform: scale(1); }
+  50% { opacity: 0.24; transform: scale(1.1); }
+}
+
+.torch-flame-1 {
+  animation: torchFlame1 1.8s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+.torch-flame-2 {
+  animation: torchFlame2 1.4s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+.torch-flame-3 {
+  animation: torchFlame1 2.2s ease-in-out infinite alternate-reverse;
+  transform-origin: bottom center;
+}
+
+.torch-glow-anim {
+  animation: torchGlow 2.5s ease-in-out infinite;
+}
+
+/* Hero campfire, dynamic embers, and forest eyes animations */
+@keyframes campfireFlame {
+  0%, 100% { transform: scale(1) translateY(0) rotate(0deg); opacity: 0.95; }
+  25% { transform: scale(1.06, 0.93) translateY(-3px) rotate(-1.5deg); opacity: 0.85; }
+  50% { transform: scale(0.95, 1.08) translateY(-6px) rotate(1.5deg); opacity: 1; }
+  75% { transform: scale(1.04, 0.96) translateY(-2px) rotate(-1deg); opacity: 0.9; }
+}
+
+@keyframes floatEmber {
+  0% { transform: translateY(0) translateX(0) scale(1); opacity: 1; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(-130px) translateX(18px) scale(0.15); opacity: 0; }
+}
+
+@keyframes creatureBlink {
+  0%, 70%, 100% { opacity: 0.25; transform: scale(0.9); }
+  80%, 92% { opacity: 1; transform: scale(1.15); }
+}
+
+.campfire-flame-1 {
+  animation: campfireFlame 1.2s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+.campfire-flame-2 {
+  animation: campfireFlame 1.5s ease-in-out infinite alternate-reverse;
+  transform-origin: bottom center;
+}
+
+.campfire-flame-3 {
+  animation: campfireFlame 1.8s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+.campfire-flame-4 {
+  animation: campfireFlame 1.1s ease-in-out infinite alternate-reverse;
+  transform-origin: bottom center;
+}
+
+.ember {
+  animation: floatEmber 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.ember-d0 { animation-delay: 0s; }
+.ember-d1 { animation-delay: 0.4s; }
+.ember-d2 { animation-delay: 0.8s; }
+.ember-d3 { animation-delay: 1.2s; }
+.ember-d4 { animation-delay: 1.6s; }
+.ember-d5 { animation-delay: 2.0s; }
+.ember-d6 { animation-delay: 2.4s; }
+.ember-d7 { animation-delay: 2.8s; }
+
+.creature-eyes {
+  animation: creatureBlink 3.5s ease-in-out infinite;
+}
+
+/* Treasure Map Experience section background matching shubhamgl.com */
+.treasure-map-bg {
+  background-color: #f4e4c6;
+  background-image: 
+    radial-gradient(ellipse at 50% 50%, rgba(255, 248, 220, 0.4) 0%, rgba(200, 160, 110, 0.3) 100%),
+    radial-gradient(circle at 20% 20%, rgba(139, 111, 71, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(139, 111, 71, 0.08) 0%, transparent 40%);
+}
