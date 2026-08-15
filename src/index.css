@@ -86,66 +86,43 @@ button:focus-visible {
   animation: torchGlow 2.5s ease-in-out infinite;
 }
 
-/* Hero campfire, dynamic embers, and firefly animations */
-@keyframes campfire-flicker {
-  0%, 100% { opacity: 1; transform: scaleY(1) scaleX(1); }
-  25% { opacity: 0.85; transform: scaleY(1.08) scaleX(0.93) skewX(-1.5deg); }
-  50% { opacity: 1; transform: scaleY(0.94) scaleX(1.05) skewX(1.5deg); }
-  75% { opacity: 0.9; transform: scaleY(1.04) scaleX(0.97) skewX(-1deg); }
+/* Hero campfire, dynamic embers, and forest eyes animations */
+@keyframes campfireFlame {
+  0%, 100% { transform: scale(1) translateY(0) rotate(0deg); opacity: 0.95; }
+  25% { transform: scale(1.06, 0.93) translateY(-3px) rotate(-1.5deg); opacity: 0.85; }
+  50% { transform: scale(0.95, 1.08) translateY(-6px) rotate(1.5deg); opacity: 1; }
+  75% { transform: scale(1.04, 0.96) translateY(-2px) rotate(-1deg); opacity: 0.9; }
 }
-
-@keyframes campfire-glow-pulse {
-  0%, 100% { opacity: 0.15; transform: scaleX(1); }
-  50% { opacity: 0.28; transform: scaleX(1.15) scaleY(1.08); }
-}
-
-@keyframes firefly {
-  0%, 100% { opacity: 0; transform: translateY(0); }
-  25% { opacity: 0.8; transform: translateY(-8px) translateX(4px); }
-  50% { opacity: 0.2; transform: translateY(-16px) translateX(-4px); }
-  75% { opacity: 0.9; transform: translateY(-8px) translateX(2px); }
-}
-
-.campfire-flame-1 {
-  transform-origin: 720px 444px;
-  animation: 1.8s ease-in-out infinite campfire-flicker;
-}
-
-.campfire-flame-2 {
-  transform-origin: 720px 442px;
-  animation: 1.5s ease-in-out 0.15s infinite campfire-flicker;
-}
-
-.campfire-flame-3 {
-  transform-origin: 720px 440px;
-  animation: 1.3s ease-in-out 0.3s infinite campfire-flicker;
-}
-
-.campfire-flame-4 {
-  transform-origin: 720px 439px;
-  animation: 1.1s ease-in-out 0.1s infinite campfire-flicker;
-}
-
-.campfire-glow {
-  transform-origin: 720px 420px;
-  animation: 2.2s ease-in-out infinite campfire-glow-pulse;
-}
-
-.firefly {
-  animation: 4s ease-in-out infinite firefly;
-}
-.firefly-d0 { animation-delay: 0s; }
-.firefly-d1 { animation-delay: 0.8s; }
-.firefly-d2 { animation-delay: 1.2s; }
-.firefly-d3 { animation-delay: 1.8s; }
-.firefly-d4 { animation-delay: 2.4s; }
-.firefly-d5 { animation-delay: 3s; }
-.firefly-d6 { animation-delay: 3.5s; }
 
 @keyframes floatEmber {
   0% { transform: translateY(0) translateX(0) scale(1); opacity: 1; }
   50% { opacity: 0.8; }
   100% { transform: translateY(-130px) translateX(18px) scale(0.15); opacity: 0; }
+}
+
+@keyframes creatureBlink {
+  0%, 70%, 100% { opacity: 0.25; transform: scale(0.9); }
+  80%, 92% { opacity: 1; transform: scale(1.15); }
+}
+
+.campfire-flame-1 {
+  animation: campfireFlame 1.2s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+.campfire-flame-2 {
+  animation: campfireFlame 1.5s ease-in-out infinite alternate-reverse;
+  transform-origin: bottom center;
+}
+
+.campfire-flame-3 {
+  animation: campfireFlame 1.8s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+.campfire-flame-4 {
+  animation: campfireFlame 1.1s ease-in-out infinite alternate-reverse;
+  transform-origin: bottom center;
 }
 
 .ember {
@@ -159,6 +136,10 @@ button:focus-visible {
 .ember-d5 { animation-delay: 2.0s; }
 .ember-d6 { animation-delay: 2.4s; }
 .ember-d7 { animation-delay: 2.8s; }
+
+.creature-eyes {
+  animation: creatureBlink 3.5s ease-in-out infinite;
+}
 
 /* Treasure Map Experience section background matching shubhamgl.com */
 .treasure-map-bg {
