@@ -18,7 +18,7 @@ export default function App() {
         {!introDone && <DragonIntro onDone={() => setIntroDone(true)} />}
       </AnimatePresence>
 
-      <Nav onReplayIntro={() => setIntroDone(false)} />
+      <Nav />
       <TalkToMe />
       <main className="mx-auto max-w-rail px-7">
         <Hero onReplayIntro={() => setIntroDone(false)} />

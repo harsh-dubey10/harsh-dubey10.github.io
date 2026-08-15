@@ -225,19 +225,6 @@ export default function DragonIntro({ onDone, onVideoStart }: DragonIntroProps) 
         }}
       />
 
-      {/* SVG Dragon Scale Pattern (from reference IICT 2026 splash) */}
-      <svg className="absolute inset-0 h-full w-full pointer-events-none" style={{ opacity: 0.08 }}>
-        <defs>
-          <pattern id="splash-scales" x="0" y="0" width="48" height="40" patternUnits="userSpaceOnUse">
-            <ellipse cx="24" cy="0" rx="24" ry="12" fill="none" stroke="#7b2fff" strokeWidth="0.8" />
-            <ellipse cx="0" cy="20" rx="24" ry="12" fill="none" stroke="#7b2fff" strokeWidth="0.8" />
-            <ellipse cx="48" cy="20" rx="24" ry="12" fill="none" stroke="#7b2fff" strokeWidth="0.8" />
-            <ellipse cx="24" cy="40" rx="24" ry="12" fill="none" stroke="#7b2fff" strokeWidth="0.8" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#splash-scales)" />
-      </svg>
-
       {/* Dragon Aura Radial Glow */}
       <div
         className="pointer-events-none absolute inset-0"
