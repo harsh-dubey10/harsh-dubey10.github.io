@@ -16,7 +16,11 @@ const eyeSpots = [
   { id: 9, left: '91%', bottom: '50%', color: '#FFB800', size: 'w-[7px] h-[5px]', delay: '2.1s' },
 ]
 
-export default function Hero() {
+interface HeroProps {
+  onReplayIntro?: () => void
+}
+
+export default function Hero({ onReplayIntro }: HeroProps) {
   const typed = useTypewriter(profile.roles)
   const [hoveredMountain, setHoveredMountain] = useState(false)
 
@@ -33,14 +37,16 @@ export default function Hero() {
 
       {/* 3. Hero Title & Dynamic Typewriter Tagline Block */}
       <div className="relative z-10 text-center px-6 -mt-[14vh] max-w-5xl mx-auto select-none">
-        <motion.p
+        <motion.button
+          onClick={onReplayIntro}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-white/30 text-xs sm:text-sm tracking-[0.3em] uppercase mb-6"
+          className="text-white/35 hover:text-brass transition-colors text-xs sm:text-sm tracking-[0.3em] uppercase mb-6 inline-flex items-center cursor-pointer group"
+          title="Replay Dragon Intro"
         >
-          a new quest begins
-        </motion.p>
+          <span>a new quest begins</span>
+        </motion.button>
 
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
