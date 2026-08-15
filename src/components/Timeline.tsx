@@ -344,12 +344,12 @@ export default function Timeline() {
       let bestStart = { len: 0, dy: Infinity }
       let bestEnd = { len: 0, dy: Infinity }
 
-      // Sample 600 points to accurately map minY and maxY on the spline
+      // Sample 600 points: Start at top (minY), end at bottom (maxY) to follow scroll direction
       for (let i = 0; i <= 600; i++) {
         const sampleLen = (len * i) / 600
         const pt = path.getPointAtLength(sampleLen)
-        const dStart = Math.abs(pt.y - maxY)
-        const dEnd = Math.abs(pt.y - minY)
+        const dStart = Math.abs(pt.y - minY)
+        const dEnd = Math.abs(pt.y - maxY)
 
         if (dStart < bestStart.dy) {
           bestStart = { len: sampleLen, dy: dStart }
