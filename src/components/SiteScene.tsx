@@ -18,9 +18,9 @@ import { prefersReducedMotion } from '../lib/webgl'
 
 /**
  * Sections the particle field reacts to, in scroll order. Each one maps to a
- * formation index: 0 = drifting dust (About), 1 = agent network (Projects),
+ * formation index: 0 = flowing wave field (About), 1 = agent network (Projects),
  * 2 = globe with orbit (Contact). The Experience map is opaque, so the
- * dust → network morph happens unseen behind it.
+ * wave → network morph happens unseen behind it.
  */
 const SECTION_FORMATIONS: [id: string, formation: number][] = [
   ['profile', 0],
@@ -46,6 +46,15 @@ const VERT = /* glsl */ `
     vec3 p = m < 1.0
       ? mix(position, aNetwork, smoothstep(0.0, 1.0, m))
       : mix(aNetwork, aGlobe, smoothstep(1.0, 2.0, m));
+
+    // The About formation is a particle sea: waves roll through it, fading
+    // out as the field morphs away.
+    float wave = 1.0 - smoothstep(0.0, 1.0, m);
+    p.y += wave * (
+      sin(position.x * 0.42 + uTime * 0.7) * 0.55 +
+      cos(position.z * 0.55 + uTime * 0.5) * 0.45 +
+      sin((position.x + position.z) * 0.22 + uTime * 0.35) * 0.35
+    );
 
     // Idle breathing so nothing is ever perfectly still.
     float t = uTime * 0.5 + aRand * 40.0;
@@ -73,6 +82,34 @@ const FRAG = /* glsl */ `
     vec3 col = mix(brass, moon, step(0.72, vRand));
     float twinkle = 0.65 + 0.35 * sin(uTime * (0.8 + vRand) + vRand * 50.0);
     gl_FragColor = vec4(col, disc * disc * twinkle * uFade * 0.75);
+  }
+`
+
+/** Messages hopping between agents along the network's edges. */
+const PACKET_VERT = /* glsl */ `
+  uniform float uTime;
+  uniform float uPixelRatio;
+  attribute vec3 aTo;
+  attribute vec2 aTiming; // x: speed, y: offset
+  varying float vAlpha;
+  void main() {
+    float t = fract(uTime * aTiming.x + aTiming.y);
+    vec3 p = mix(position, aTo, t);
+    vec4 mv = modelViewMatrix * vec4(p, 1.0);
+    gl_Position = projectionMatrix * mv;
+    gl_PointSize = 5.0 * uPixelRatio * (34.0 / -mv.z);
+    vAlpha = sin(t * 3.1416);
+  }
+`
+
+const GLOW_FRAG = /* glsl */ `
+  uniform float uOpacity;
+  varying float vAlpha;
+  void main() {
+    float d = length(gl_PointCoord - 0.5);
+    float core = smoothstep(0.18, 0.0, d);
+    float glow = smoothstep(0.5, 0.0, d) * 0.5;
+    gl_FragColor = vec4(mix(vec3(1.0, 0.75, 0.38), vec3(1.0, 0.96, 0.85), core), (core + glow) * vAlpha * uOpacity);
   }
 `
 
@@ -158,7 +195,9 @@ export default function SiteScene() {
     scene.add(group)
 
     /* Particles ------------------------------------------------------ */
-    const count = isSmall ? 2400 : 5200
+    const cols = isSmall ? 48 : 80
+    const rows = isSmall ? 50 : 65
+    const count = cols * rows
     const dust = new Float32Array(count * 3)
     const network = new Float32Array(count * 3)
     const globe = new Float32Array(count * 3)
@@ -171,10 +210,10 @@ export default function SiteScene() {
     const tmp = new Vector3()
 
     for (let i = 0; i < count; i++) {
-      // Dust: a wide, shallow cloud that fills the viewport.
-      dust[i * 3] = (Math.random() - 0.5) * 30
-      dust[i * 3 + 1] = (Math.random() - 0.5) * 18
-      dust[i * 3 + 2] = -10 + Math.random() * 12
+      // Wave field: a grid laid out as a sea below the eye line.
+      dust[i * 3] = ((i % cols) / (cols - 1) - 0.5) * 36
+      dust[i * 3 + 1] = -4.4
+      dust[i * 3 + 2] = -16 + (Math.floor(i / cols) / (rows - 1)) * 17
 
       // Network: a third of the particles cluster on nodes, the rest trace edges.
       if (i % 3 === 0) {
@@ -248,6 +287,122 @@ export default function SiteScene() {
     })
     group.add(new LineSegments(edgeGeo, edgeMat))
 
+    /* Packets travelling along network edges, both directions. */
+    const packetCount = edges.length * 2
+    const pFrom = new Float32Array(packetCount * 3)
+    const pTo = new Float32Array(packetCount * 3)
+    const pTiming = new Float32Array(packetCount * 2)
+    edges.forEach(([a, b], i) => {
+      for (let d = 0; d < 2; d++) {
+        const k = i * 2 + d
+        ;(d ? nodes[b] : nodes[a]).toArray(pFrom, k * 3)
+        ;(d ? nodes[a] : nodes[b]).toArray(pTo, k * 3)
+        pTiming[k * 2] = 0.18 + Math.random() * 0.3
+        pTiming[k * 2 + 1] = Math.random()
+      }
+    })
+    const packetGeo = new BufferGeometry()
+    packetGeo.setAttribute('position', new BufferAttribute(pFrom, 3))
+    packetGeo.setAttribute('aTo', new BufferAttribute(pTo, 3))
+    packetGeo.setAttribute('aTiming', new BufferAttribute(pTiming, 2))
+    const packetUniforms = { uTime: uniforms.uTime, uPixelRatio: uniforms.uPixelRatio, uOpacity: { value: 0 } }
+    const packetMat = new ShaderMaterial({
+      uniforms: packetUniforms,
+      vertexShader: PACKET_VERT,
+      fragmentShader: GLOW_FRAG,
+      transparent: true,
+      depthWrite: false,
+      blending: AdditiveBlending,
+    })
+    const packets = new Points(packetGeo, packetMat)
+    packets.frustumCulled = false
+    group.add(packets)
+
+    /* Globe arcs: great-circle links lifted off the surface, each with a pulse. */
+    const arcCount = isSmall ? 7 : 12
+    const arcSegments = 40
+    const arcs: Vector3[][] = []
+    const arcPos = new Float32Array(arcCount * arcSegments * 6)
+    const unit = () => randomInSphere(1).normalize()
+    for (let a = 0; a < arcCount; a++) {
+      let from = unit()
+      let to = unit()
+      while (from.angleTo(to) < 0.6 || from.angleTo(to) > 1.4) {
+        from = unit()
+        to = unit()
+      }
+      const pts: Vector3[] = []
+      const angle = from.angleTo(to)
+      for (let i = 0; i <= arcSegments; i++) {
+        const t = i / arcSegments
+        // Spherical interpolation, then lift toward the middle of the arc.
+        const p = from
+          .clone()
+          .multiplyScalar(Math.sin((1 - t) * angle))
+          .add(to.clone().multiplyScalar(Math.sin(t * angle)))
+          .divideScalar(Math.sin(angle))
+          .multiplyScalar(4.1 + Math.sin(t * Math.PI) * 0.75)
+        pts.push(p)
+      }
+      arcs.push(pts)
+      for (let i = 0; i < arcSegments; i++) {
+        pts[i].toArray(arcPos, (a * arcSegments + i) * 6)
+        pts[i + 1].toArray(arcPos, (a * arcSegments + i) * 6 + 3)
+      }
+    }
+    const arcGeo = new BufferGeometry()
+    arcGeo.setAttribute('position', new BufferAttribute(arcPos, 3))
+    const arcMat = new LineBasicMaterial({
+      color: 0xd9a54a,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      blending: AdditiveBlending,
+    })
+    group.add(new LineSegments(arcGeo, arcMat))
+
+    const pulsePos = new Float32Array(arcCount * 3)
+    const pulseAlpha = new Float32Array(arcCount).fill(1)
+    const pulseGeo = new BufferGeometry()
+    pulseGeo.setAttribute('position', new BufferAttribute(pulsePos, 3))
+    pulseGeo.setAttribute('aAlpha', new BufferAttribute(pulseAlpha, 1))
+    const pulseUniforms = { uOpacity: { value: 0 } }
+    const pulseMat = new ShaderMaterial({
+      uniforms: { ...pulseUniforms, uPixelRatio: uniforms.uPixelRatio },
+      vertexShader: /* glsl */ `
+        uniform float uPixelRatio;
+        attribute float aAlpha;
+        varying float vAlpha;
+        void main() {
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          gl_Position = projectionMatrix * mv;
+          gl_PointSize = 6.0 * uPixelRatio * (34.0 / -mv.z);
+          vAlpha = aAlpha;
+        }
+      `,
+      fragmentShader: GLOW_FRAG,
+      transparent: true,
+      depthWrite: false,
+      blending: AdditiveBlending,
+    })
+    const pulses = new Points(pulseGeo, pulseMat)
+    pulses.frustumCulled = false
+    group.add(pulses)
+    const arcSpeed = arcs.map(() => 0.12 + Math.random() * 0.12)
+    const arcOffset = arcs.map(() => Math.random())
+
+    function updatePulses(time: number) {
+      arcs.forEach((pts, a) => {
+        const t = (time * arcSpeed[a] + arcOffset[a]) % 1
+        const f = t * arcSegments
+        const i = Math.min(Math.floor(f), arcSegments - 1)
+        tmp.lerpVectors(pts[i], pts[i + 1], f - i).toArray(pulsePos, a * 3)
+        pulseAlpha[a] = Math.sin(t * Math.PI)
+      })
+      pulseGeo.attributes.position.needsUpdate = true
+      pulseGeo.attributes.aAlpha.needsUpdate = true
+    }
+
     /* Layout + scroll state ------------------------------------------ */
     function resize() {
       const w = window.innerWidth
@@ -290,7 +445,12 @@ export default function SiteScene() {
     function render() {
       const fm = uniforms.uMorph.value
       // Edges peak while the network is fully assembled.
-      edgeMat.opacity = Math.max(0, 1 - Math.abs(fm - 1) * 2.5) * 0.11 * uniforms.uFade.value
+      const near = (target: number) => Math.max(0, 1 - Math.abs(fm - target) * 2.5) * uniforms.uFade.value
+      edgeMat.opacity = near(1) * 0.11
+      packetUniforms.uOpacity.value = near(1) * 0.9
+      arcMat.opacity = near(2) * 0.16
+      pulseMat.uniforms.uOpacity.value = near(2) * 0.9
+      if (near(2) > 0) updatePulses(uniforms.uTime.value)
       renderer.render(scene, camera)
     }
 
@@ -304,7 +464,8 @@ export default function SiteScene() {
       eased.x += (pointer.x - eased.x) * k
       eased.y += (pointer.y - eased.y) * k
       rotation += dt * 0.04
-      group.rotation.y = rotation + eased.x * 0.25
+      // The wave field stays square to the camera; other formations turn slowly.
+      group.rotation.y = rotation * Math.min(uniforms.uMorph.value, 1) + eased.x * 0.25
       group.rotation.x = eased.y * 0.12
       // Nothing visible over the hero: skip the draw call entirely.
       if (uniforms.uFade.value > 0.002) render()
@@ -360,8 +521,7 @@ export default function SiteScene() {
       document.removeEventListener('visibilitychange', onVisibility)
       geo.dispose()
       mat.dispose()
-      edgeGeo.dispose()
-      edgeMat.dispose()
+      for (const d of [edgeGeo, edgeMat, packetGeo, packetMat, arcGeo, arcMat, pulseGeo, pulseMat]) d.dispose()
       renderer.dispose()
       renderer.domElement.remove()
     }

@@ -44,3 +44,9 @@ export interface ConnectLink {
   action: string
   icon: ConnectIcon
 }
+
+export interface StatEntry {
+  value: number
+  suffix: string
+  label: string
+}

@@ -2,6 +2,7 @@ import { ArrowUpRight, Download, Github, Linkedin, Mail } from 'lucide-react'
 import { connectLinks } from '../data/content'
 import type { ConnectIcon } from '../types'
 import Reveal from './Reveal'
+import SectionHeading from './SectionHeading'
 
 const ICONS: Record<ConnectIcon, typeof Mail> = {
   mail: Mail,
@@ -25,17 +26,14 @@ export default function Contact() {
     >
       <div className="relative z-10 mx-auto w-full max-w-5xl px-6">
         {/* Header Block matching reference section */}
-        <Reveal className="text-center mb-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.3em] text-brass">
-            04 — Get in touch
-          </p>
-          <h2 className="font-display font-extrabold text-4xl sm:text-5xl text-white mb-3">
-            Let's connect
-          </h2>
-          <p className="text-white/75 max-w-sm mx-auto text-sm sm:text-base">
-            Happy to talk research, systems, or NLP.
-          </p>
-        </Reveal>
+        <div className="mb-14">
+          <SectionHeading
+            align="center"
+            eyebrow="04 — Get in touch"
+            title="Let's connect"
+            subtitle="Happy to talk research, systems, or NLP."
+          />
+        </div>
 
         {/* Reference 4-Card Grid for Resume & Social Links */}
         <Reveal delay={0.08}>
