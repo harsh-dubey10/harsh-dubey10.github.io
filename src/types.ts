@@ -27,8 +27,11 @@ export interface ProjectEntry {
   linkLabel: string
 }
 
+export type AchievementIcon = 'trophy' | 'graduation' | 'cloud' | 'wrench'
+
 export interface AchievementEntry {
   tag: string
+  icon: AchievementIcon
   title: string
   date: string
 }

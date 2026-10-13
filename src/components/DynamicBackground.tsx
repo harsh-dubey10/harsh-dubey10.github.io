@@ -5,6 +5,8 @@ interface DynamicBackgroundProps {
   variant?: 'hero' | 'section'
   /** Color mood for the wash + stars + fireflies. Defaults to the site's gold/night theme. */
   tint?: 'gold' | 'maroon'
+  /** Draw the 2D stars + fireflies. Off when a WebGL layer renders them instead. */
+  particles?: boolean
   className?: string
 }
 
@@ -63,6 +65,7 @@ interface Firefly {
 export default function DynamicBackground({
   variant = 'section',
   tint = 'gold',
+  particles = true,
   className = '',
 }: DynamicBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -72,7 +75,7 @@ export default function DynamicBackground({
   useEffect(() => {
     const canvas = canvasRef.current
     const wrap = wrapRef.current
-    if (!canvas || !wrap) return
+    if (!particles || !canvas || !wrap) return
 
     const ctx = canvas.getContext('2d')
     if (!ctx) return
@@ -207,7 +210,7 @@ export default function DynamicBackground({
       ro.disconnect()
       document.removeEventListener('visibilitychange', onVisibility)
     }
-  }, [variant, tint])
+  }, [variant, tint, particles])
 
   return (
     <div ref={wrapRef} className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`} aria-hidden="true">
@@ -271,7 +274,7 @@ export default function DynamicBackground({
         </>
       )}
 
-      <canvas ref={canvasRef} className="absolute inset-0" />
+      {particles && <canvas ref={canvasRef} className="absolute inset-0" />}
     </div>
   )
 }

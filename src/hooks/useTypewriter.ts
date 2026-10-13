@@ -4,6 +4,8 @@ interface UseTypewriterOptions {
   typingSpeedMs?: number
   deletingSpeedMs?: number
   holdMs?: number
+  /** Show the first phrase fully on mount instead of typing it from empty. */
+  startFull?: boolean
 }
 
 /**
@@ -12,11 +14,11 @@ interface UseTypewriterOptions {
  */
 export function useTypewriter(
   phrases: string[],
-  { typingSpeedMs = 38, deletingSpeedMs = 22, holdMs = 1800 }: UseTypewriterOptions = {},
+  { typingSpeedMs = 38, deletingSpeedMs = 22, holdMs = 1800, startFull = false }: UseTypewriterOptions = {},
 ): string {
   const [phraseIndex, setPhraseIndex] = useState(0)
-  const [text, setText] = useState('')
-  const [mode, setMode] = useState<'typing' | 'holding' | 'deleting'>('typing')
+  const [text, setText] = useState(startFull ? phrases[0] ?? '' : '')
+  const [mode, setMode] = useState<'typing' | 'holding' | 'deleting'>(startFull ? 'holding' : 'typing')
 
   useEffect(() => {
     const current = phrases[phraseIndex] ?? ''

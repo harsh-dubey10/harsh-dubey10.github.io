@@ -93,7 +93,7 @@ function ProjectCard({
               {project.summary}
             </p>
           </div>
-          <span className="font-display font-extrabold text-3xl sm:text-4xl text-amber-500/25 group-hover:text-amber-500/45 transition-colors shrink-0 leading-none">
+          <span className="font-display font-extrabold text-3xl sm:text-4xl text-amber-500/50 group-hover:text-amber-500/80 transition-colors shrink-0 leading-none">
             {project.index}
           </span>
         </div>
@@ -115,7 +115,7 @@ function ProjectCard({
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className="px-3 py-1 bg-red-950/50 border border-red-800/30 rounded-lg text-xs font-mono font-medium text-red-200/80"
+              className="px-3 py-1 bg-red-950/50 border border-red-800/30 rounded-lg text-xs font-mono font-medium text-red-100/90"
             >
               {tag}
             </span>

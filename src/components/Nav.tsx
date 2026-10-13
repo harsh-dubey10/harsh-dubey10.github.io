@@ -51,7 +51,7 @@ export default function Nav() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -16, scale: 0.92 }}
             transition={{ type: 'spring', stiffness: 320, damping: 32 }}
-            className={`pointer-events-auto flex items-center rounded-full border border-neutral-200/80 bg-white/95 text-neutral-900 shadow-[0_8px_30px_rgba(0,0,0,0.15)] backdrop-blur-xl transition-[padding,margin] duration-300 ${
+            className={`pointer-events-auto flex items-center rounded-full border border-white/10 bg-[#0D0A08]/70 text-white shadow-[0_10px_40px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl backdrop-saturate-150 transition-[padding,margin] duration-300 ${
               scrolled ? 'mt-3 px-1.5 py-1.5' : 'mt-5 px-2 py-2'
             }`}
           >
@@ -63,13 +63,13 @@ export default function Nav() {
                     key={s.id}
                     href={`#${s.id}`}
                     className={`relative shrink-0 whitespace-nowrap rounded-full px-4 py-2 font-mono text-[11.5px] uppercase tracking-wide transition-colors ${
-                      isActive ? 'text-white font-medium' : 'text-neutral-600 hover:text-black'
+                      isActive ? 'text-brass font-medium' : 'text-white/70 hover:text-white'
                     }`}
                   >
                     {isActive && (
                       <motion.span
                         layoutId="nav-active-pill"
-                        className="absolute inset-0 rounded-full bg-black shadow-sm"
+                        className="absolute inset-0 rounded-full bg-brass/[0.14] ring-1 ring-inset ring-brass/45"
                         transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                       />
                     )}

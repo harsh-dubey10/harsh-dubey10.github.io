@@ -19,8 +19,8 @@ const SOCIAL_DETAILS: Record<string, { desc: string; color: string; bgAlpha: str
   },
   LinkedIn: {
     desc: 'Connect professionally.',
-    color: '#0A66C2',
-    bgAlpha: 'rgba(10, 102, 194, 0.15)',
+    color: '#6BA9F2',
+    bgAlpha: 'rgba(107, 169, 242, 0.14)',
   },
   Email: {
     desc: 'Send a direct message.',
@@ -52,7 +52,7 @@ export default function Contact() {
           <h2 className="font-display font-extrabold text-4xl sm:text-5xl text-white mb-3">
             Let's Connect
           </h2>
-          <p className="text-white/60 max-w-sm mx-auto text-sm sm:text-base">
+          <p className="text-white/75 max-w-sm mx-auto text-sm sm:text-base">
             Happy to talk research, systems, or NLP.
           </p>
         </Reveal>
@@ -90,7 +90,7 @@ export default function Contact() {
                     </h3>
 
                     {/* Description */}
-                    <p className="text-white/50 text-xs flex-1 mb-5">
+                    <p className="text-white/70 text-xs flex-1 mb-5">
                       {details.desc}
                     </p>
 
@@ -113,9 +113,9 @@ export default function Contact() {
         </Reveal>
 
         {/* Footer copyright note */}
-        <div className="mt-16 text-center font-mono text-xs text-white/30">
+        <div className="mt-16 text-center font-mono text-xs text-white/60">
           the adventure never ends. <br />
-          <span className="mt-1 inline-block text-white/20">
+          <span className="mt-1 inline-block text-white/45">
             © {new Date().getFullYear()} Harsh Vardhan Dubey
           </span>
         </div>

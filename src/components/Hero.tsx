@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Suspense, lazy, useCallback, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import DynamicBackground from './DynamicBackground'
 import { profile } from '../data/content'
@@ -16,13 +16,24 @@ const eyeSpots = [
   { id: 9, left: '91%', bottom: '50%', color: '#FFB800', size: 'w-[7px] h-[5px]', delay: '2.1s' },
 ]
 
-interface HeroProps {
-  onReplayIntro?: () => void
+// three.js is split into its own chunk so it never blocks first paint.
+const HeroScene = lazy(() => import('./HeroScene'))
+
+function hasWebGL() {
+  try {
+    const canvas = document.createElement('canvas')
+    return !!(canvas.getContext('webgl2') || canvas.getContext('webgl'))
+  } catch {
+    return false
+  }
 }
 
-export default function Hero({ onReplayIntro }: HeroProps) {
-  const typed = useTypewriter(profile.roles)
+export default function Hero() {
+  const typed = useTypewriter(profile.roles, { startFull: true })
   const [hoveredMountain, setHoveredMountain] = useState(false)
+  const [webgl, setWebgl] = useState(hasWebGL)
+  const campfireRef = useRef<HTMLDivElement>(null)
+  const onWebglUnsupported = useCallback(() => setWebgl(false), [])
 
   return (
     <section
@@ -32,21 +43,28 @@ export default function Hero({ onReplayIntro }: HeroProps) {
       {/* 1. Deep night background gradient wash */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#080E1C] via-[#0B1420] to-[#0D2416] -z-0" />
 
-      {/* 2. Dynamic starfield background canvas */}
-      <DynamicBackground variant="hero" tint="gold" />
+      {/* 2. Sky wash, moon and hills; the 2D starfield only runs as a no-WebGL fallback */}
+      <DynamicBackground variant="hero" tint="gold" particles={!webgl} />
+
+      {/* 2b. WebGL starfield, fireflies and campfire embers */}
+      {webgl && (
+        <div className="pointer-events-none absolute inset-0 z-[11]">
+          <Suspense fallback={null}>
+            <HeroScene emitterRef={campfireRef} onUnsupported={onWebglUnsupported} />
+          </Suspense>
+        </div>
+      )}
 
       {/* 3. Hero Title & Dynamic Typewriter Tagline Block */}
-      <div className="relative z-10 text-center px-6 -mt-[14vh] max-w-5xl mx-auto select-none">
-        <motion.button
-          onClick={onReplayIntro}
+      <div className="relative z-20 text-center px-6 -mt-[14vh] max-w-5xl mx-auto select-none">
+        <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-white/35 hover:text-brass transition-colors text-xs sm:text-sm tracking-[0.3em] uppercase mb-6 inline-flex items-center cursor-pointer group"
-          title="Replay Dragon Intro"
+          className="mb-6 text-xs uppercase tracking-[0.3em] text-white/55 sm:text-sm"
         >
-          <span>a new quest begins</span>
-        </motion.button>
+          a new quest begins
+        </motion.p>
 
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -74,7 +92,7 @@ export default function Hero({ onReplayIntro }: HeroProps) {
       <div className="absolute bottom-[24%] sm:bottom-[26%] z-20">
         <a href="#profile" className="flex flex-col items-center gap-1.5 cursor-pointer group">
           <div className="flex flex-col items-center gap-1.5">
-            <span className="text-[10px] sm:text-[11px] tracking-[0.25em] uppercase text-white/50 font-mono font-medium group-hover:text-brass transition-colors">
+            <span className="text-[10px] sm:text-[11px] tracking-[0.25em] uppercase text-white/70 font-mono font-medium group-hover:text-brass transition-colors">
               venture forth
             </span>
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="animate-bounce">
@@ -112,17 +130,6 @@ export default function Hero({ onReplayIntro }: HeroProps) {
       >
         {/* Base Green Ground Bar */}
         <div className="absolute bottom-0 left-0 w-full h-[18%] bg-[#0D2E14]" />
-
-        {/* Fireflies floating over green mountains */}
-        <div className="absolute inset-0 z-10 pointer-events-none">
-          <div className="firefly firefly-d0 absolute w-1.5 h-1.5 rounded-full bg-gold/80 shadow-[0_0_6px_#FFB800]" style={{ left: '18%', bottom: '45%' }} />
-          <div className="firefly firefly-d1 absolute w-1 h-1 rounded-full bg-gold/60 shadow-[0_0_4px_#FFB800]" style={{ left: '35%', bottom: '55%' }} />
-          <div className="firefly firefly-d2 absolute w-1.5 h-1.5 rounded-full bg-gold/70 shadow-[0_0_6px_#FFB800]" style={{ left: '55%', bottom: '40%' }} />
-          <div className="firefly firefly-d3 absolute w-1 h-1 rounded-full bg-gold/50 shadow-[0_0_4px_#FFB800]" style={{ left: '72%', bottom: '50%' }} />
-          <div className="firefly firefly-d4 absolute w-1.5 h-1.5 rounded-full bg-gold/60 shadow-[0_0_5px_#FFB800]" style={{ left: '85%', bottom: '42%' }} />
-          <div className="firefly firefly-d5 absolute w-1 h-1 rounded-full bg-gold/70 shadow-[0_0_4px_#FFB800]" style={{ left: '8%', bottom: '38%' }} />
-          <div className="firefly firefly-d6 absolute w-1 h-1 rounded-full bg-gold/50 shadow-[0_0_4px_#FFB800]" style={{ left: '45%', bottom: '60%' }} />
-        </div>
 
         {/* Mountain Layer 1 (#15221A & #112018) */}
         <svg viewBox="0 0 1440 500" className="absolute bottom-0 w-full h-full pointer-events-none" preserveAspectRatio="xMidYMax slice">
@@ -214,16 +221,8 @@ export default function Hero({ onReplayIntro }: HeroProps) {
       </div>
 
       {/* 7. Dynamic Campfire Element */}
-      <div className="absolute bottom-[5%] sm:bottom-[7%] left-1/2 -translate-x-1/2 z-15 pointer-events-none flex flex-col items-center">
-        <div className="relative w-36 sm:w-44 h-28 sm:h-36 overflow-visible">
-          {/* Floating Rising Ember Sparks */}
-          <div className="ember ember-d0 absolute rounded-full w-1.5 h-1.5 bg-[#FF6B35] shadow-[0_0_6px_#FF6B35]" style={{ left: '46%', bottom: '40%' }} />
-          <div className="ember ember-d1 absolute rounded-full w-2 h-2 bg-[#FF8236] shadow-[0_0_8px_#FF8236]" style={{ left: '52%', bottom: '38%' }} />
-          <div className="ember ember-d2 absolute rounded-full w-1.5 h-1.5 bg-[#FFB800] shadow-[0_0_6px_#FFB800]" style={{ left: '44%', bottom: '42%' }} />
-          <div className="ember ember-d3 absolute rounded-full w-2.5 h-2.5 bg-[#FF4422] shadow-[0_0_10px_#FF4422]" style={{ left: '54%', bottom: '35%' }} />
-          <div className="ember ember-d4 absolute rounded-full w-1.5 h-1.5 bg-[#FFB800] shadow-[0_0_6px_#FFB800]" style={{ left: '48%', bottom: '44%' }} />
-          <div className="ember ember-d5 absolute rounded-full w-2 h-2 bg-[#FF6B35] shadow-[0_0_8px_#FF6B35]" style={{ left: '50%', bottom: '39%' }} />
-
+      <div className="absolute bottom-[5%] sm:bottom-[7%] left-1/2 -translate-x-1/2 z-[12] pointer-events-none flex flex-col items-center">
+        <div ref={campfireRef} className="relative w-36 sm:w-44 h-28 sm:h-36 overflow-visible">
           {/* Campfire SVG */}
           <svg viewBox="0 0 160 160" className="w-full h-full drop-shadow-[0_0_20px_rgba(255,130,54,0.6)]">
             {/* Campfire glow base */}

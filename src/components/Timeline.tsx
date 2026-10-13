@@ -571,10 +571,10 @@ export default function Timeline() {
                         <span className="whitespace-nowrap text-[10px] font-medium text-[#3A2A1A]/70 lg:hidden">
                           {stop.period}
                         </span>
-                        <span className="hidden whitespace-nowrap text-[11px] font-semibold text-[#5C4A3A]/70 lg:block">
+                        <span className="hidden whitespace-nowrap text-[11px] font-semibold text-[#5C4A3A] lg:block">
                           {stop.company}
                         </span>
-                        <span className="hidden whitespace-nowrap text-[10px] font-medium text-[#3A2A1A]/50 lg:block">
+                        <span className="hidden whitespace-nowrap text-[10px] font-medium text-[#3A2A1A]/75 lg:block">
                           {stop.period}
                         </span>
                       </div>
@@ -653,7 +653,7 @@ export default function Timeline() {
                         )}
                       </h4>
                     </div>
-                    <span className="rounded-full bg-[#8B6F47]/10 px-2 py-0.5 text-[8px] font-bold text-[#8B6F47]">
+                    <span className="rounded-full bg-[#8B6F47]/10 px-2 py-0.5 text-[10px] font-bold text-[#7A5E38]">
                       Lv. {stop.level}
                     </span>
                   </div>

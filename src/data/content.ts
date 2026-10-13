@@ -121,21 +121,25 @@ export const projects: ProjectEntry[] = [
 export const achievements: AchievementEntry[] = [
   {
     tag: 'Rank 3',
+    icon: 'trophy',
     title: 'Dept. rank 3 of 125, B.Tech — 4th-year topper',
     date: 'March 2025',
   },
   {
     tag: 'Qualified',
+    icon: 'graduation',
     title: 'GATE CS 2025',
     date: 'March 2025',
   },
   {
     tag: 'Selected',
+    icon: 'cloud',
     title: 'Google Cloud Ready Program',
     date: 'May – July 2023',
   },
   {
     tag: 'Completed',
+    icon: 'wrench',
     title: 'AICTE Smart Manufacturing skilling program',
     date: 'September 2022',
   },

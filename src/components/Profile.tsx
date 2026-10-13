@@ -1,6 +1,15 @@
+import { Cloud, GraduationCap, Trophy, Wrench } from 'lucide-react'
 import { achievements, connectLinks, education, profile, skills } from '../data/content'
+import type { AchievementIcon } from '../types'
 import DynamicBackground from './DynamicBackground'
 import Reveal from './Reveal'
+
+const ACHIEVEMENT_ICONS: Record<AchievementIcon, typeof Trophy> = {
+  trophy: Trophy,
+  graduation: GraduationCap,
+  cloud: Cloud,
+  wrench: Wrench,
+}
 
 function WallTorch({ className = '' }: { className?: string }) {
   return (
@@ -290,50 +299,29 @@ export default function Profile() {
           <p className="text-xs font-mono font-medium text-[#D9A54A] uppercase tracking-[0.3em] mb-6">
             Achievements Unlocked
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {achievements.map((a) => (
-              <div key={a.title} className="group flex flex-col items-center cursor-default">
-                <div className="relative mb-2">
-                  <div
-                    className="absolute -inset-2 rounded-full blur-lg transition-all duration-300 group-hover:-inset-4 group-hover:blur-xl"
-                    style={{ background: 'rgba(217,165,74,0.25)', opacity: 0.6 }}
-                  />
-                  <div
-                    className="absolute -inset-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md"
-                    style={{ background: '#D9A54A' }}
-                  />
-                  <div
-                    className="relative w-16 h-16 rounded-full flex items-center justify-center border-2 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
-                    style={{
-                      borderColor: 'rgba(217,165,74,0.45)',
-                      background: 'rgba(217,165,74,0.15)',
-                    }}
-                  >
-                    <div
-                      className="w-12 h-12 rounded-full bg-[#1C1410] border flex items-center justify-center text-center p-1"
-                      style={{ borderColor: 'rgba(217,165,74,0.45)' }}
-                    >
-                      <span
-                        className="font-mono font-bold text-[11px] leading-tight"
-                        style={{ color: '#D9A54A' }}
-                      >
-                        {a.tag}
-                      </span>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4">
+            {achievements.map((a) => {
+              const Icon = ACHIEVEMENT_ICONS[a.icon]
+              return (
+                <div key={a.title} className="group flex cursor-default flex-col items-center text-center">
+                  <div className="relative mb-3">
+                    <div className="absolute -inset-3 rounded-full bg-brass/20 opacity-60 blur-xl transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="relative flex h-16 w-16 items-center justify-center rounded-full border-2 border-brass/50 bg-gradient-to-b from-[#2A1E14] to-[#140E0A] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-transform duration-300 group-hover:-translate-y-1">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full border border-brass/35 text-brass">
+                        <Icon size={22} strokeWidth={1.75} aria-hidden="true" />
+                      </div>
                     </div>
                   </div>
-                  <div
-                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1.5 rounded-b-full transition-transform duration-300 group-hover:scale-125"
-                    style={{ background: 'rgba(217,165,74,0.45)' }}
-                  />
+                  <span className="mb-2 rounded-full border border-brass/40 bg-brass/10 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-brass">
+                    {a.tag}
+                  </span>
+                  <p className="text-[13px] font-medium leading-snug text-white transition-colors duration-300 group-hover:text-brass">
+                    {a.title}
+                  </p>
+                  <p className="mt-1 font-mono text-[11px] text-white/60">{a.date}</p>
                 </div>
-                <p className="text-white text-[12px] text-center font-medium leading-tight mt-1 transition-colors duration-300 group-hover:text-[#D9A54A]">
-                  {a.title}
-                </p>
-                <p className="text-[#D9A54A]/60 text-[10px] font-mono text-center mt-0.5">
-                  {a.date}
-                </p>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </Reveal>
       </div>
