@@ -2,7 +2,6 @@ import type {
   AchievementEntry,
   ConnectLink,
   EducationEntry,
-  StatEntry,
   ProjectEntry,
   TimelineEntry,
 } from '../types'
@@ -51,14 +50,6 @@ export const skills: string[] = [
   'MySQL',
   'Docker',
   'Git',
-]
-
-/** Headline figures for the About section — each one is backed elsewhere on the page. */
-export const stats: StatEntry[] = [
-  { value: 3, suffix: '/125', label: 'Department rank, B.Tech CSE' },
-  { value: 100, suffix: '+', label: 'Concurrent LLM agents simulated in Viralyst' },
-  { value: 25, suffix: '%', label: 'Drop in user abandonment at Vivada' },
-  { value: skills.length, suffix: '', label: 'Languages, frameworks and tools' },
 ]
 
 export const timeline: TimelineEntry[] = [

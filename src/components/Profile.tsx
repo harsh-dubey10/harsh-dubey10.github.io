@@ -1,10 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
-import { animate, motion, useInView } from 'framer-motion'
 import { Cloud, GraduationCap, Trophy, Wrench } from 'lucide-react'
-import { achievements, education, profile, skills, stats, timeline } from '../data/content'
+import { achievements, connectLinks, education, profile, skills } from '../data/content'
 import type { AchievementIcon } from '../types'
 import Reveal from './Reveal'
-import SectionHeading from './SectionHeading'
 
 const ACHIEVEMENT_ICONS: Record<AchievementIcon, typeof Trophy> = {
   trophy: Trophy,
@@ -13,126 +10,150 @@ const ACHIEVEMENT_ICONS: Record<AchievementIcon, typeof Trophy> = {
   wrench: Wrench,
 }
 
-const current = timeline.find((t) => t.current)
-
-/** Counts up from zero the first time it scrolls into view. */
-function CountUp({ to }: { to: number }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
-  const [value, setValue] = useState(0)
-
-  useEffect(() => {
-    if (!inView) return
-    const controls = animate(0, to, {
-      duration: 1.6,
-      ease: [0.2, 0.7, 0.2, 1],
-      onUpdate: (v) => setValue(Math.round(v)),
-    })
-    return () => controls.stop()
-  }, [inView, to])
-
-  return <span ref={ref}>{value}</span>
-}
-
 export default function Profile() {
   return (
     <section
       id="profile"
-      className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-t border-white/[0.06] px-6 py-24 lg:py-36"
+      className="relative left-1/2 right-1/2 -mx-[50vw] flex min-h-screen w-screen flex-col justify-center border-t border-white/[0.06] px-6 py-24 lg:py-32"
     >
-      <div className="relative z-20 mx-auto w-full max-w-6xl">
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          {/* Story */}
-          <div className="lg:col-span-7">
-            <SectionHeading eyebrow="01 — Character sheet" title="About" />
+      <div className="relative z-20 mx-auto w-full max-w-5xl">
+        {/* Section Header */}
+        <Reveal className="mb-8 text-center sm:text-left">
+          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.3em] text-brass">
+            01 — Character sheet
+          </p>
+          <h2 className="mb-1 font-display text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
+            About
+          </h2>
+        </Reveal>
 
-            <Reveal delay={0.1}>
-              <p className="mt-10 font-display text-2xl leading-snug text-white/90 sm:text-[1.75rem]">
-                {profile.bio[0]}
-              </p>
-            </Reveal>
-            <Reveal delay={0.15}>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-[17px]">
-                {profile.bio[1]}
-              </p>
-            </Reveal>
-
-            {current && (
-              <Reveal delay={0.2}>
-                <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.03] py-2 pl-3 pr-4 backdrop-blur-sm">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-60" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-signal" />
-                  </span>
-                  <span className="text-sm text-white/80">
-                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/50">Now · </span>
-                    {current.org}
-                  </span>
+        {/* Two-Column Grid Replicating shubhamgl.com Exactly */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+          {/* Left Column: Character Avatar / Image Card */}
+          <Reveal delay={0.05} className="h-full">
+            <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.55)] aspect-square w-full group transition-all duration-300 hover:border-brass/50">
+              <img
+                src="/profile.PNG"
+                alt={profile.name}
+                className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+              />
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background:
+                    'linear-gradient(to top, rgba(8,11,19,0.92) 0%, rgba(8,11,19,0.4) 40%, transparent 100%)',
+                }}
+              />
+              <div className="absolute bottom-0 left-0 right-0 p-5 pointer-events-none flex items-end justify-between">
+                <div>
+                  <h3 className="font-display font-bold text-2xl text-white leading-tight">
+                    {profile.name}
+                  </h3>
+                  <p className="text-white/80 font-mono text-xs uppercase tracking-widest mt-0.5">
+                    M.Tech CSE · IIT Gandhinagar
+                  </p>
                 </div>
-              </Reveal>
-            )}
-          </div>
+                <span className="font-display font-bold text-lg text-brass border border-brass/50 bg-[#0B0F1A]/80 backdrop-blur-md px-3.5 py-1 rounded-lg shadow-lg">
+                  {profile.level}
+                </span>
+              </div>
+              <div
+                className="absolute inset-0 pointer-events-none rounded-xl"
+                style={{
+                  background:
+                    'linear-gradient(165deg, rgba(217,165,74,0.14) 0%, transparent 35%)',
+                }}
+              />
+            </div>
+          </Reveal>
 
-          {/* Education + toolkit */}
-          <Reveal delay={0.1} className="lg:col-span-5 lg:pt-4">
-            <div className="rounded-2xl border border-white/10 bg-[#0D1220]/70 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-8">
-              <p className="mb-5 font-mono text-[11px] font-medium uppercase tracking-[0.3em] text-brass">Education</p>
-              <ol className="relative space-y-6 border-l border-white/10 pl-6">
-                {education.map((e, i) => (
-                  <li key={e.school} className="relative">
-                    <span
-                      className={`absolute -left-[29px] top-1.5 h-2.5 w-2.5 rounded-full border-2 ${
-                        i === 0 ? 'border-brass bg-brass/40' : 'border-white/30 bg-[#0D1220]'
-                      }`}
-                    />
-                    <p className="font-display text-lg font-semibold leading-tight text-white">{e.school}</p>
-                    <p className="mt-1 text-sm text-white/65">{e.program}</p>
-                  </li>
-                ))}
-              </ol>
+          {/* Right Column: Bio, Education, Skills, and Connect Links (bg-mortar theme) */}
+          <Reveal delay={0.1} className="h-full">
+            <div className="flex h-full flex-col justify-between rounded-xl border border-white/10 bg-[#0D1220]/75 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-colors hover:border-brass/30 sm:p-7">
+              <div>
+                <div className="text-white/85 text-[15px] leading-relaxed mb-4 space-y-3">
+                  {profile.bio.map((para) => (
+                    <p key={para}>{para}</p>
+                  ))}
+                </div>
 
-              <div className="my-7 h-px bg-white/10" />
+                {/* Education Pills */}
+                <div className="flex flex-col gap-2 mb-4">
+                  {education.map((e) => (
+                    <div
+                      key={e.school}
+                      className="flex flex-wrap items-center justify-between gap-2 bg-brass/[0.08] border border-brass/25 rounded-lg px-3.5 py-2"
+                    >
+                      <span className="text-white text-xs font-semibold">
+                        {e.school} — {e.program}
+                      </span>
+                      {(e.period || e.stat) && (
+                        <span className="text-brass text-[11px] font-mono font-medium">
+                          {[e.period, e.stat].filter(Boolean).join(' · ')}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
 
-              <p className="mb-4 font-mono text-[11px] font-medium uppercase tracking-[0.3em] text-brass">Toolkit</p>
-              <div className="flex flex-wrap gap-1.5">
-                {skills.map((skill, i) => (
-                  <motion.span
-                    key={skill}
-                    initial={{ opacity: 0, y: 8 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: 0.2 + i * 0.025 }}
-                    className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1 font-mono text-xs font-medium text-white/85 transition-colors hover:border-brass/60 hover:text-brass"
-                  >
-                    {skill}
-                  </motion.span>
-                ))}
+                <div className="w-full h-px bg-white/[0.10] my-4" />
+
+                {/* Skills */}
+                <div>
+                  <p className="text-xs font-mono font-medium text-brass uppercase tracking-[0.3em] mb-3">
+                    Skills
+                  </p>
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {skills.map((skill) => (
+                      <span
+                        key={skill}
+                        className="px-2.5 py-1 text-xs text-white/85 bg-white/[0.04] border border-white/10 rounded font-mono font-medium hover:border-brass/60 hover:text-brass transition-colors"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="w-full h-px bg-white/[0.10] my-4" />
+
+                {/* Connect */}
+                <div>
+                  <p className="text-xs font-mono font-medium text-brass uppercase tracking-[0.3em] mb-3">
+                    Connect
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {connectLinks.map((link) => (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        target={link.href.startsWith('http') ? '_blank' : undefined}
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 bg-brass/10 border border-brass/35 text-brass text-[12px] px-3.5 py-1.5 rounded-md hover:bg-brass/20 transition-colors font-mono"
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="w-full h-px bg-white/[0.10] mt-5 mb-3" />
+                <p className="text-white/60 font-mono text-[11px] text-center">
+                  Loves systems · Loves building · Loves research
+                </p>
               </div>
             </div>
           </Reveal>
         </div>
 
-        {/* By the numbers */}
-        <div className="mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 lg:grid-cols-4">
-          {stats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.06} className="h-full">
-              <div className="h-full bg-[#0B0F1A]/90 p-6 backdrop-blur-xl sm:p-8">
-                <p className="font-display text-4xl font-bold text-brass sm:text-5xl">
-                  <CountUp to={s.value} />
-                  <span className="text-white/40">{s.suffix}</span>
-                </p>
-                <p className="mt-3 text-sm leading-snug text-white/70">{s.label}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-
-        {/* Achievements */}
-        <Reveal delay={0.1} className="mt-20">
-          <p className="mb-8 font-mono text-xs font-medium uppercase tracking-[0.3em] text-brass">
-            Achievements unlocked
+        {/* Achievements Unlocked Section */}
+        <Reveal delay={0.15} className="mt-12">
+          <p className="text-xs font-mono font-medium text-brass uppercase tracking-[0.3em] mb-6">
+            Achievements Unlocked
           </p>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4">
             {achievements.map((a) => {
               const Icon = ACHIEVEMENT_ICONS[a.icon]
               return (

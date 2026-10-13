@@ -229,9 +229,10 @@ export default function DynamicBackground({
         <>
           {/* moon */}
           <div
-            // Sits between the text and the portrait on desktop, top-right on phones.
-            className="absolute right-[7%] top-[7%] animate-moonGlow rounded-full lg:left-[45%] lg:right-auto lg:top-[11%]"
+            className="absolute animate-moonGlow rounded-full"
             style={{
+              top: '9%',
+              right: '11%',
               width: 'clamp(56px, 8vw, 92px)',
               height: 'clamp(56px, 8vw, 92px)',
               background:

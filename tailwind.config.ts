@@ -51,16 +51,11 @@ export default {
           '0%, 100%': { filter: 'brightness(1)', transform: 'scale(1)' },
           '50%': { filter: 'brightness(1.08)', transform: 'scale(1.02)' },
         },
-        scrollCue: {
-          '0%': { transform: 'translateY(-100%)' },
-          '100%': { transform: 'translateY(200%)' },
-        },
       },
       animation: {
         blink: 'blink 1s step-end infinite',
         pulseDot: 'pulseDot 1.8s ease-in-out infinite',
         moonGlow: 'moonGlow 6s ease-in-out infinite',
-        scrollCue: 'scrollCue 1.8s cubic-bezier(0.6, 0, 0.4, 1) infinite',
       },
     },
   },
