@@ -40,6 +40,32 @@ const STAR_FRAG = /* glsl */ `
   }
 `
 
+/** Shooting stars: a short tail of points that crosses the sky every few seconds. */
+const METEOR_VERT = /* glsl */ `
+  uniform float uTime;
+  uniform float uPixelRatio;
+  attribute vec4 aMeteor; // x,y: start, z: period, w: offset
+  attribute float aTail;   // 0 = head … 1 = end of tail
+  varying float vAlpha;
+  void main() {
+    float t = mod(uTime + aMeteor.w, aMeteor.z) / 1.1; // streak lasts 1.1s
+    vec3 dir = normalize(vec3(-1.0, -0.42, 0.0));
+    vec3 p = vec3(aMeteor.xy, -30.0) + dir * (t * 34.0 - aTail * 3.2);
+    vec4 mv = modelViewMatrix * vec4(p, 1.0);
+    gl_Position = projectionMatrix * mv;
+    gl_PointSize = (1.0 - aTail) * 5.0 * uPixelRatio * (30.0 / -mv.z) + 1.0;
+    vAlpha = step(t, 1.0) * sin(min(t, 1.0) * 3.1416) * (1.0 - aTail);
+  }
+`
+
+const METEOR_FRAG = /* glsl */ `
+  varying float vAlpha;
+  void main() {
+    float d = length(gl_PointCoord - 0.5);
+    gl_FragColor = vec4(1.0, 0.95, 0.85, smoothstep(0.5, 0.0, d) * vAlpha * 0.9);
+  }
+`
+
 const FIREFLY_VERT = /* glsl */ `
   uniform float uTime;
   uniform float uPixelRatio;
@@ -174,6 +200,35 @@ export default function HeroScene({ emitterRef, onUnsupported }: HeroSceneProps)
     })
     const stars = new Points(starGeo, starMat)
     scene.add(stars)
+
+    /* Shooting stars ------------------------------------------------- */
+    const meteorCount = 3
+    const tail = 18
+    const meteorAttr = new Float32Array(meteorCount * tail * 4)
+    const tailAttr = new Float32Array(meteorCount * tail)
+    for (let m = 0; m < meteorCount; m++) {
+      // Start high and to the right; long, staggered periods keep them rare.
+      const start = [4 + Math.random() * 24, 7 + Math.random() * 10, 11 + m * 5, 3 + Math.random() * 10]
+      for (let i = 0; i < tail; i++) {
+        meteorAttr.set(start, (m * tail + i) * 4)
+        tailAttr[m * tail + i] = i / (tail - 1)
+      }
+    }
+    const meteorGeo = new BufferGeometry()
+    meteorGeo.setAttribute('position', new BufferAttribute(new Float32Array(meteorCount * tail * 3), 3))
+    meteorGeo.setAttribute('aMeteor', new BufferAttribute(meteorAttr, 4))
+    meteorGeo.setAttribute('aTail', new BufferAttribute(tailAttr, 1))
+    const meteorMat = new ShaderMaterial({
+      uniforms: shared,
+      vertexShader: METEOR_VERT,
+      fragmentShader: METEOR_FRAG,
+      transparent: true,
+      depthWrite: false,
+      blending: AdditiveBlending,
+    })
+    const meteors = new Points(meteorGeo, meteorMat)
+    meteors.frustumCulled = false
+    stars.add(meteors)
 
     /* Fireflies ------------------------------------------------------ */
     const flyCount = isSmall ? 14 : 28
@@ -340,7 +395,7 @@ export default function HeroScene({ emitterRef, onUnsupported }: HeroSceneProps)
       io.disconnect()
       document.removeEventListener('visibilitychange', onVisibility)
       window.removeEventListener('pointermove', onPointer)
-      for (const obj of [starGeo, starMat, flyGeo, flyMat, emberGeo, emberMat]) obj.dispose()
+      for (const obj of [starGeo, starMat, meteorGeo, meteorMat, flyGeo, flyMat, emberGeo, emberMat]) obj.dispose()
       renderer.dispose()
       renderer.domElement.remove()
     }

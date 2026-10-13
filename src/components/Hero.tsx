@@ -1,22 +1,34 @@
 import { Suspense, lazy, useCallback, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import DynamicBackground from './DynamicBackground'
-import { ArrowUpRight } from 'lucide-react'
-import { profile } from '../data/content'
-import { useTypewriter } from '../hooks/useTypewriter'
+import { ArrowUpRight, Github, Linkedin, Mail } from 'lucide-react'
+import { connectLinks } from '../data/content'
 import { hasWebGL } from '../lib/webgl'
 
 // three.js is split into its own chunk so it never blocks first paint.
 const HeroScene = lazy(() => import('./HeroScene'))
 
+const SOCIALS = [
+  { label: 'GitHub', icon: Github },
+  { label: 'LinkedIn', icon: Linkedin },
+  { label: 'Email', icon: Mail },
+].map((s) => ({ ...s, href: connectLinks.find((l) => l.label === s.label)?.href ?? '#' }))
+
 export default function Hero() {
-  const typed = useTypewriter(profile.roles, { startFull: true })
   const [webgl, setWebgl] = useState(hasWebGL)
+  const sectionRef = useRef<HTMLElement>(null)
   const campfireRef = useRef<HTMLDivElement>(null)
   const onWebglUnsupported = useCallback(() => setWebgl(false), [])
 
+  // The headline drifts up and fades as the hero scrolls away.
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] })
+  const textY = useTransform(scrollYProgress, [0, 1], [0, -120])
+  const textOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0])
+  const cueOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0])
+
   return (
     <section
+      ref={sectionRef}
       id="top"
       className="relative left-1/2 right-1/2 -mx-[50vw] flex h-screen w-screen flex-col items-center justify-center overflow-hidden bg-[#080E1C]"
     >
@@ -35,42 +47,45 @@ export default function Hero() {
         </div>
       )}
 
-      {/* 3. Hero Title & Dynamic Typewriter Tagline Block */}
-      <div className="relative z-20 text-center px-6 -mt-[14vh] max-w-5xl mx-auto select-none">
+      {/* 3. Headline, intro and calls to action */}
+      <motion.div
+        style={{ y: textY, opacity: textOpacity }}
+        className="relative z-20 mx-auto -mt-[12vh] max-w-4xl select-none px-6 text-center"
+      >
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-6 text-xs uppercase tracking-[0.3em] text-white/55 sm:text-sm"
+          className="mb-5 font-mono text-[11px] uppercase tracking-[0.3em] text-white/60 sm:text-xs"
         >
-          Systems · Security · NLP
+          Graduate researcher · M.Tech CSE
         </motion.p>
 
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="font-display font-extrabold text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-brass leading-[0.88] mb-4 drop-shadow-[0_0_30px_rgba(255,130,54,0.25)]"
+          className="font-display text-[clamp(3rem,8.5vw,7.5rem)] font-extrabold leading-[0.9] text-brass drop-shadow-[0_0_30px_rgba(255,130,54,0.22)]"
         >
-          Harsh Vardhan<br />
+          Harsh Vardhan
+          <br />
           <span className="text-white">Dubey</span>
         </motion.h1>
 
-        {/* Preserved dynamic typewriter tagline */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.45 }}
-          className="mt-4 h-7 font-mono text-sm sm:text-base text-brass/90"
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.4 }}
+          className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-white/75 sm:text-base"
         >
-          <span>{typed}</span>
-          <span className="ml-0.5 inline-block h-[1em] w-[2px] translate-y-[2px] animate-blink bg-brass align-middle" />
-        </motion.div>
+          Working in the FUSS Group at IIT Gandhinagar under Prof. Abhishek Bichhawat. I build things end to
+          end, then make them work better.
+        </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
           className="mt-8 flex flex-wrap items-center justify-center gap-3"
         >
           <a
@@ -87,8 +102,36 @@ export default function Hero() {
           >
             Résumé <ArrowUpRight size={14} />
           </a>
+          <span className="mx-1 hidden h-6 w-px bg-white/15 sm:block" aria-hidden="true" />
+          <div className="flex w-full items-center justify-center gap-1 sm:w-auto">
+            {SOCIALS.map(({ label, href, icon: Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target={href.startsWith('http') ? '_blank' : undefined}
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="rounded-full p-2.5 text-white/70 transition-colors hover:bg-white/[0.06] hover:text-brass"
+              >
+                <Icon size={18} strokeWidth={1.75} />
+              </a>
+            ))}
+          </div>
         </motion.div>
-      </div>
+      </motion.div>
+
+      {/* 4. Scroll cue */}
+      <motion.a
+        href="#profile"
+        style={{ opacity: cueOpacity }}
+        aria-label="Scroll to about"
+        className="absolute bottom-8 left-8 z-30 hidden flex-col items-center gap-3 text-white/60 transition-colors hover:text-brass lg:flex"
+      >
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] [writing-mode:vertical-rl]">Scroll</span>
+        <span className="relative h-12 w-px overflow-hidden bg-white/15">
+          <span className="absolute inset-x-0 top-0 h-1/2 animate-scrollCue bg-brass" />
+        </span>
+      </motion.a>
 
       {/* 5. Campfire Ambient Radial Glow */}
       <div

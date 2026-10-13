@@ -33,7 +33,7 @@ export default function Contact() {
             Let's connect
           </h2>
           <p className="text-white/75 max-w-sm mx-auto text-sm sm:text-base">
-            Happy to talk research, systems, or NLP.
+            Happy to talk research and systems.
           </p>
         </Reveal>
 
