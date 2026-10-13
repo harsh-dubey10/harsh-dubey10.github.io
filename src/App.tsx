@@ -1,3 +1,4 @@
+import { Suspense, lazy, useState } from 'react'
 import Contact from './components/Contact'
 import Hero from './components/Hero'
 import Nav from './components/Nav'
@@ -5,19 +6,30 @@ import Profile from './components/Profile'
 import TalkToMe from './components/TalkToMe'
 import Timeline from './components/Timeline'
 import Work from './components/Work'
+import { hasWebGL } from './lib/webgl'
+
+// three.js lives in its own chunk, loaded after first paint.
+const SiteScene = lazy(() => import('./components/SiteScene'))
 
 export default function App() {
+  const [webgl] = useState(hasWebGL)
+
   return (
     <div className="relative">
+      {webgl && (
+        <Suspense fallback={null}>
+          <SiteScene />
+        </Suspense>
+      )}
       <Nav />
       <TalkToMe />
-      <main className="mx-auto max-w-rail px-7">
+      <main className="relative z-[1] mx-auto max-w-rail px-7">
         <Hero />
         <Profile />
         <Timeline />
         <Work />
       </main>
-      <div className="mx-auto max-w-rail px-7">
+      <div className="relative z-[1] mx-auto max-w-rail px-7">
         <Contact />
       </div>
     </div>

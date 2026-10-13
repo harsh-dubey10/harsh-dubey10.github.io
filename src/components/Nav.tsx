@@ -4,9 +4,9 @@ import { useActiveSection } from '../hooks/useActiveSection'
 
 const SECTIONS = [
   { id: 'profile', label: 'About' },
-  { id: 'timeline', label: 'Journey' },
-  { id: 'work', label: 'Quests' },
-  { id: 'contact', label: 'Connect' },
+  { id: 'timeline', label: 'Experience' },
+  { id: 'work', label: 'Projects' },
+  { id: 'contact', label: 'Contact' },
 ]
 
 export default function Nav() {

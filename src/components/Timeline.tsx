@@ -413,8 +413,8 @@ export default function Timeline() {
       {/* 2. Section Header matching reference */}
       <div className="relative z-20 mx-auto max-w-4xl px-6 pb-6 pt-16 lg:pb-2">
         <div>
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.3em]" style={{ color: '#3A2A1A' }}>
-            Journey So Far
+          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.3em]" style={{ color: '#7A5E38' }}>
+            02 — Journey so far
           </p>
           <h2
             className="mb-2 font-display font-bold text-4xl sm:text-5xl lg:text-6xl"
@@ -422,7 +422,7 @@ export default function Timeline() {
           >
             Experience
           </h2>
-          <p className="mb-2 text-lg italic" style={{ color: '#5C4A3A99' }}>
+          <p className="mb-2 text-lg italic" style={{ color: '#5C4A3A' }}>
             Every stop, a story. Every role, a relic.
           </p>
           <p className="mb-4 text-sm italic lg:hidden" style={{ color: '#3A2A1A' }}>

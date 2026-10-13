@@ -1,36 +1,16 @@
 import { Suspense, lazy, useCallback, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import DynamicBackground from './DynamicBackground'
+import { ArrowUpRight } from 'lucide-react'
 import { profile } from '../data/content'
 import { useTypewriter } from '../hooks/useTypewriter'
-
-const eyeSpots = [
-  { id: 1, left: '4%', bottom: '38%', color: '#FF4422', size: 'w-[7px] h-[5px]', delay: '0s' },
-  { id: 2, left: '10%', bottom: '52%', color: '#FFB800', size: 'w-[8px] h-[6px]', delay: '1.2s' },
-  { id: 3, left: '18%', bottom: '42%', color: '#FF6B18', size: 'w-[7px] h-[5px]', delay: '2.4s' },
-  { id: 4, left: '25%', bottom: '55%', color: '#FF4422', size: 'w-[7px] h-[5px]', delay: '0.8s' },
-  { id: 5, left: '32%', bottom: '40%', color: '#FFB800', size: 'w-[8px] h-[6px]', delay: '1.8s' },
-  { id: 6, left: '68%', bottom: '44%', color: '#FFB800', size: 'w-[8px] h-[6px]', delay: '1.4s' },
-  { id: 7, left: '76%', bottom: '52%', color: '#FF6B18', size: 'w-[7px] h-[5px]', delay: '2.8s' },
-  { id: 8, left: '84%', bottom: '42%', color: '#FF4422', size: 'w-[8px] h-[6px]', delay: '0.5s' },
-  { id: 9, left: '91%', bottom: '50%', color: '#FFB800', size: 'w-[7px] h-[5px]', delay: '2.1s' },
-]
+import { hasWebGL } from '../lib/webgl'
 
 // three.js is split into its own chunk so it never blocks first paint.
 const HeroScene = lazy(() => import('./HeroScene'))
 
-function hasWebGL() {
-  try {
-    const canvas = document.createElement('canvas')
-    return !!(canvas.getContext('webgl2') || canvas.getContext('webgl'))
-  } catch {
-    return false
-  }
-}
-
 export default function Hero() {
   const typed = useTypewriter(profile.roles, { startFull: true })
-  const [hoveredMountain, setHoveredMountain] = useState(false)
   const [webgl, setWebgl] = useState(hasWebGL)
   const campfireRef = useRef<HTMLDivElement>(null)
   const onWebglUnsupported = useCallback(() => setWebgl(false), [])
@@ -63,7 +43,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="mb-6 text-xs uppercase tracking-[0.3em] text-white/55 sm:text-sm"
         >
-          a new quest begins
+          Systems · Security · NLP
         </motion.p>
 
         <motion.h1
@@ -86,26 +66,28 @@ export default function Hero() {
           <span>{typed}</span>
           <span className="ml-0.5 inline-block h-[1em] w-[2px] translate-y-[2px] animate-blink bg-brass align-middle" />
         </motion.div>
-      </div>
 
-      {/* 4. "VENTURE FORTH" Orientation Link placed ABOVE campfire flame */}
-      <div className="absolute bottom-[24%] sm:bottom-[26%] z-20">
-        <a href="#profile" className="flex flex-col items-center gap-1.5 cursor-pointer group">
-          <div className="flex flex-col items-center gap-1.5">
-            <span className="text-[10px] sm:text-[11px] tracking-[0.25em] uppercase text-white/70 font-mono font-medium group-hover:text-brass transition-colors">
-              venture forth
-            </span>
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="animate-bounce">
-              <path
-                d="M9 3 L9 13 M4 9 L9 14 L14 9"
-                stroke="#FF8236"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-        </a>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="mt-8 flex flex-wrap items-center justify-center gap-3"
+        >
+          <a
+            href="#work"
+            className="inline-flex items-center gap-2 rounded-full bg-brass px-5 py-2.5 font-mono text-[12px] font-semibold uppercase tracking-[0.12em] text-[#120D06] shadow-[0_8px_30px_rgba(217,165,74,0.25)] transition hover:bg-[#E8B95E] hover:shadow-[0_8px_40px_rgba(217,165,74,0.4)]"
+          >
+            View projects
+          </a>
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.04] px-5 py-2.5 font-mono text-[12px] font-semibold uppercase tracking-[0.12em] text-white backdrop-blur-sm transition hover:border-brass/60 hover:text-brass"
+          >
+            Résumé <ArrowUpRight size={14} />
+          </a>
+        </motion.div>
       </div>
 
       {/* 5. Campfire Ambient Radial Glow */}
@@ -123,11 +105,7 @@ export default function Hero() {
       />
 
       {/* 6. Multi-Layered Green Slopes & Mountain Landscape Container */}
-      <div
-        onMouseEnter={() => setHoveredMountain(true)}
-        onMouseLeave={() => setHoveredMountain(false)}
-        className="jungle-landscape-container group absolute bottom-0 left-0 w-full select-none z-10 cursor-pointer"
-      >
+      <div className="pointer-events-none absolute bottom-0 left-0 z-10 w-full select-none">
         {/* Base Green Ground Bar */}
         <div className="absolute bottom-0 left-0 w-full h-[18%] bg-[#0D2E14]" />
 
@@ -191,33 +169,6 @@ export default function Hero() {
           <ellipse cx="1460" cy="420" rx="65" ry="27" fill="#123E1B" />
         </svg>
 
-        {/* Dynamic Glowing Forest Eyes across Green Bushes */}
-        <div className="absolute bottom-0 left-0 w-full h-[60%] z-[15] pointer-events-auto">
-          {eyeSpots.map((spot) => (
-            <div
-              key={spot.id}
-              className={`absolute flex items-center gap-[6px] transition-all duration-300 creature-eyes ${
-                hoveredMountain ? '!opacity-100 scale-125' : ''
-              }`}
-              style={{ left: spot.left, bottom: spot.bottom, animationDelay: spot.delay }}
-            >
-              <div
-                className={`${spot.size} rounded-full`}
-                style={{
-                  backgroundColor: spot.color,
-                  boxShadow: `0 0 8px ${spot.color}, 0 0 14px ${spot.color}`,
-                }}
-              />
-              <div
-                className={`${spot.size} rounded-full`}
-                style={{
-                  backgroundColor: spot.color,
-                  boxShadow: `0 0 8px ${spot.color}, 0 0 14px ${spot.color}`,
-                }}
-              />
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* 7. Dynamic Campfire Element */}

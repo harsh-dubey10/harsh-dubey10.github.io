@@ -146,10 +146,10 @@ export const achievements: AchievementEntry[] = [
 ]
 
 export const connectLinks: ConnectLink[] = [
-  { label: 'Resume', href: '/resume.pdf', action: 'Loot', icon: 'download' },
+  { label: 'Resume', href: '/resume.pdf', action: 'Download', icon: 'download' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/harshvardhandubey-/', action: 'Connect', icon: 'linkedin' },
-  { label: 'Email', href: 'mailto:harsh.dubey@iitgn.ac.in', action: 'Write', icon: 'mail' },
-  { label: 'GitHub', href: 'https://github.com/harsh-dubey10', action: 'Browse', icon: 'github' },
+  { label: 'Email', href: 'mailto:harsh.dubey@iitgn.ac.in', action: 'Email', icon: 'mail' },
+  { label: 'GitHub', href: 'https://github.com/harsh-dubey10', action: 'View', icon: 'github' },
 ]
 
 export const galleryImages: { src: string; caption: string }[] = [
