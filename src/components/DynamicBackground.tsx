@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
 interface DynamicBackgroundProps {
-  /** 'hero' is a night skyline with hills + moon, 'section' is a calmer starfield. */
+  /** 'hero' is a night skyline with hills, 'section' is a calmer starfield. */
   variant?: 'hero' | 'section'
   /** Color mood for the wash + stars + fireflies. Defaults to the site's gold/night theme. */
   tint?: 'gold' | 'maroon'
@@ -227,28 +227,6 @@ export default function DynamicBackground({
 
       {variant === 'hero' && (
         <>
-          {/* moon */}
-          <div
-            className="absolute animate-moonGlow rounded-full"
-            style={{
-              top: '9%',
-              right: '11%',
-              width: 'clamp(56px, 8vw, 92px)',
-              height: 'clamp(56px, 8vw, 92px)',
-              background:
-                'radial-gradient(circle at 35% 32%, #F7EFD9 0%, #EBDFBB 38%, #D9C692 70%, #C9B37E 100%)',
-              boxShadow: '0 0 60px 18px rgba(238,225,180,0.28), 0 0 140px 50px rgba(217,165,74,0.10)',
-            }}
-          >
-            <div
-              className="absolute inset-0 rounded-full opacity-70 mix-blend-multiply"
-              style={{
-                background:
-                  'radial-gradient(circle at 68% 62%, rgba(160,145,105,0.55) 0%, rgba(160,145,105,0) 22%), radial-gradient(circle at 30% 70%, rgba(160,145,105,0.4) 0%, rgba(160,145,105,0) 16%), radial-gradient(circle at 55% 30%, rgba(160,145,105,0.35) 0%, rgba(160,145,105,0) 14%)',
-              }}
-            />
-          </div>
-
           {/* rolling hills — far to near, layered for depth */}
           <svg
             className="absolute bottom-0 left-0 h-[42%] w-full"

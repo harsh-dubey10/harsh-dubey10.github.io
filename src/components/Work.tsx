@@ -36,29 +36,26 @@ function ProjectCard({
         ref={ref}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#0D1220]/70 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-[border-color,transform] duration-300 will-change-transform hover:border-brass/35 sm:p-10"
+        className="group relative overflow-hidden rounded-2xl border border-[#D8D2C5] bg-[#F7F5F0] p-6 shadow-[0_1px_2px_rgba(40,30,15,0.06),0_12px_32px_rgba(40,30,15,0.06)] transition-[border-color,transform,box-shadow] duration-300 will-change-transform hover:border-[#B9A27A] hover:shadow-[0_1px_2px_rgba(40,30,15,0.08),0_18px_44px_rgba(40,30,15,0.1)] sm:p-10"
       >
-        {/* Brass sheen along the top edge */}
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brass/40 to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-100" />
-
         <div className="grid gap-6 sm:grid-cols-[auto,1fr] sm:gap-10">
-          <span className="font-display text-4xl font-bold leading-none text-brass/70 transition-colors group-hover:text-brass sm:text-5xl">
+          <span className="font-display text-4xl font-bold leading-none text-[#B08A4A] transition-colors group-hover:text-[#8A5A12] sm:text-5xl">
             {project.index}
           </span>
 
           <div>
-            <h3 className="mb-1 font-display text-2xl font-bold leading-tight text-white sm:text-3xl">
+            <h3 className="mb-1 font-display text-2xl font-bold leading-tight text-[#15130F] sm:text-3xl">
               {project.title}
             </h3>
-            <p className="mb-5 font-mono text-xs uppercase tracking-[0.14em] text-brass/90">
+            <p className="mb-5 font-mono text-xs uppercase tracking-[0.14em] text-[#8A5A12]">
               {project.summary}
             </p>
 
-            <ul className="mb-6 space-y-2.5 text-[15px] leading-relaxed text-white/80">
+            <ul className="mb-6 space-y-2.5 text-[15px] leading-relaxed text-[#3D3A34]">
               {project.bullets.map((bullet) => (
                 <li
                   key={bullet}
-                  className="relative pl-5 before:absolute before:left-0 before:top-[0.7em] before:h-px before:w-2.5 before:bg-brass/70"
+                  className="relative pl-5 before:absolute before:left-0 before:top-[0.7em] before:h-px before:w-2.5 before:bg-[#B08A4A]"
                 >
                   {bullet}
                 </li>
@@ -70,7 +67,7 @@ function ProjectCard({
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[11px] font-medium text-white/80"
+                    className="rounded-full border border-[#D8D2C5] bg-[#EFEBE3] px-3 py-1 font-mono text-[11px] font-medium text-[#4A463F]"
                   >
                     {tag}
                   </span>
@@ -80,7 +77,7 @@ function ProjectCard({
                 href={project.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 font-mono text-[12px] font-medium text-white transition-colors hover:border-brass/60 hover:text-brass"
+                className="inline-flex items-center gap-2 rounded-full border border-[#15130F] px-4 py-2 font-mono text-[12px] font-medium text-[#15130F] transition-colors hover:bg-[#15130F] hover:text-[#F7F5F0]"
               >
                 {project.linkLabel} <ArrowUpRight size={14} />
               </a>
@@ -96,18 +93,18 @@ export default function Work() {
   return (
     <section
       id="work"
-      className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-t border-white/[0.06] py-24 sm:py-32"
+      className="paper-bg relative left-1/2 right-1/2 -mx-[50vw] w-screen py-24 sm:py-32"
     >
-      <div className="relative z-10 mx-auto w-full max-w-4xl px-6">
+      <div className="relative z-[35] mx-auto w-full max-w-4xl px-6">
         <Reveal className="mb-12 text-left">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.3em] text-brass">
+          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.3em] text-[#8A5A12]">
             03 — Quest log
           </p>
-          <h2 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl text-text mb-2">
+          <h2 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl text-[#15130F] mb-2">
             Projects
           </h2>
-          <p className="max-w-2xl text-base text-white/70 sm:text-lg">
-            Selected work across distributed systems, LLM agents, and NLP pipelines.
+          <p className="max-w-2xl text-base text-[#5A564E] sm:text-lg">
+            Selected work across distributed systems, LLM agents, and systems programming.
           </p>
         </Reveal>
 

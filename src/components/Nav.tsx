@@ -59,9 +59,11 @@ export default function Nav() {
               {SECTIONS.map((s) => {
                 const isActive = active === s.id
                 return (
-                  <a
+                  <button
+                    type="button"
                     key={s.id}
-                    href={`#${s.id}`}
+                    data-scroll-to={s.id}
+                    aria-current={isActive ? 'true' : undefined}
                     className={`relative shrink-0 whitespace-nowrap rounded-full px-4 py-2 font-mono text-[11.5px] uppercase tracking-wide transition-colors ${
                       isActive ? 'text-brass font-medium' : 'text-white/70 hover:text-white'
                     }`}
@@ -74,7 +76,7 @@ export default function Nav() {
                       />
                     )}
                     <span className="relative z-10">{s.label}</span>
-                  </a>
+                  </button>
                 )
               })}
             </div>

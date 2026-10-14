@@ -21,18 +21,18 @@ export default function Contact() {
   return (
     <footer
       id="contact"
-      className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-t border-white/[0.06] py-24 sm:py-32"
+      className="paper-bg relative left-1/2 right-1/2 -mx-[50vw] w-screen py-24 sm:py-32"
     >
-      <div className="relative z-10 mx-auto w-full max-w-5xl px-6">
+      <div className="relative z-[35] mx-auto w-full max-w-5xl px-6">
         {/* Header Block matching reference section */}
         <Reveal className="text-center mb-12">
-          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.3em] text-brass">
+          <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.3em] text-[#8A5A12]">
             04 — Get in touch
           </p>
-          <h2 className="font-display font-extrabold text-4xl sm:text-5xl text-white mb-3">
+          <h2 className="font-display font-extrabold text-4xl sm:text-5xl text-[#15130F] mb-3">
             Let's connect
           </h2>
-          <p className="text-white/75 max-w-sm mx-auto text-sm sm:text-base">
+          <p className="text-[#5A564E] max-w-sm mx-auto text-sm sm:text-base">
             Happy to talk research and systems.
           </p>
         </Reveal>
@@ -52,26 +52,26 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="block group h-full"
                 >
-                  <div className="relative rounded-2xl border border-white/10 p-5 sm:p-6 transition-all bg-[#0D1220]/70 backdrop-blur-xl text-center shadow-[0_20px_60px_rgba(0,0,0,0.4)] hover:-translate-y-1 hover:border-brass/45 h-full flex flex-col items-center group">
+                  <div className="relative rounded-2xl border border-[#D8D2C5] p-5 sm:p-6 transition-all bg-[#F7F5F0] text-center shadow-[0_1px_2px_rgba(40,30,15,0.06),0_12px_32px_rgba(40,30,15,0.06)] hover:-translate-y-1 hover:border-[#B9A27A] h-full flex flex-col items-center group">
                     {/* Centered Icon */}
                     <div className="flex justify-center mb-4 relative">
-                      <div className="p-3.5 rounded-full bg-brass/10 border border-brass/30 text-brass group-hover:scale-110 transition-transform duration-300">
+                      <div className="p-3.5 rounded-full bg-[#EFE6D4] border border-[#D9C49A] text-[#8A5A12] group-hover:scale-110 transition-transform duration-300">
                         <Icon size={22} strokeWidth={1.75} />
                       </div>
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-display font-bold text-lg sm:text-xl text-white mb-1">
+                    <h3 className="font-display font-bold text-lg sm:text-xl text-[#15130F] mb-1">
                       {link.label}
                     </h3>
 
                     {/* Description */}
-                    <p className="text-white/70 text-xs flex-1 mb-5">
+                    <p className="text-[#5A564E] text-xs flex-1 mb-5">
                       {desc}
                     </p>
 
                     {/* Action Badge Pill */}
-                    <span className="inline-flex items-center gap-1 rounded-full border border-white/15 px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-white/90 transition-colors group-hover:border-brass/60 group-hover:text-brass">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-[#15130F]/80 px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#15130F] transition-colors group-hover:bg-[#15130F] group-hover:text-[#F7F5F0]">
                       {link.action}
                       <ArrowUpRight size={13} />
                     </span>
@@ -83,7 +83,7 @@ export default function Contact() {
         </Reveal>
 
         {/* Footer copyright note */}
-        <div className="mt-16 pb-16 text-center font-mono text-xs leading-relaxed text-white/60 sm:pb-0">
+        <div className="mt-16 pb-16 text-center font-mono text-xs leading-relaxed text-[#6B665D] sm:pb-0">
           © {new Date().getFullYear()} Harsh Vardhan Dubey · Gandhinagar, India
         </div>
       </div>

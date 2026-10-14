@@ -1,49 +1,68 @@
-# Harsh Vardhan Dubey — Portfolio
+# Portfolio — Harsh Vardhan Dubey
 
-React + TypeScript + Tailwind rebuild of the personal portfolio. 
+The personal portfolio of **Harsh Vardhan Dubey**, an M.Tech (CSE) researcher in the FUSS Group at
+IIT Gandhinagar working on formal methods, systems, web security and compilers.
+
+**Live:** [harsh-dubey10.github.io](https://harsh-dubey10.github.io)
+
+## What's inside
+
+A single-page site built with React, TypeScript and Tailwind, with three.js drawings throughout.
+
+| Section | What it shows |
+| :--- | :--- |
+| **Hero** | Name, role and links on a night backdrop, with pen-sketch drawings in the margins |
+| **About** | A "character sheet": portrait, bio, education, skills, links and achievements |
+| **Experience** | A parchment map with torn WebGL paper edges, a timeline of roles and sketched navigation instruments |
+| **Projects** | An inventor's notebook: project cards beside sketched gears, polyhedra and machines |
+| **Contact** | Ways to get in touch |
+
+### The sketches
+
+All margin drawings are real 3D line geometry drawn by `SketchWorld.tsx` on a single WebGL canvas.
+Each stroke is drawn twice with a slight wobble, like a quick pen sketch. The drawings drift at a
+slower parallax than the page and turn as you scroll. The canvas is split into three "sheets",
+each clipped to its own sections:
+
+- **Night sheet** (Hero, About): pale ink on navy. A globe pinned on Gandhinagar, a node graph,
+  a syntax tree, a padlock, orbit rings and star-chart crosses.
+- **Map sheet** (Experience): sepia ink. A compass rose, a sextant and an island chart with a
+  dashed route.
+- **Notebook sheet** (Projects, Contact): meshing gears, Leonardo's aerial screw, polyhedra, an
+  armillary and a swirl of tiny sketches.
+
+The shapes live in `src/lib/sketch.ts`, so adding a drawing means writing a function that returns
+line segments. Without WebGL the site falls back to a 2D background, and the motion respects
+`prefers-reduced-motion`.
+
 ## Run it
 
 ```bash
 npm install
-npm run dev
+npm run dev      # local dev server
+npm run build    # type-check and build a static site into dist/
 ```
 
-Then open the printed local URL. `npm run build` produces a static `dist/` folder you can
-deploy anywhere (GitHub Pages, Vercel, Netlify, etc).
-
-## Design system
-
-**Concept.** A "spec sheet / field log" identity — instrument-panel brass on deep indigo —
-fitted to a systems & NLP researcher's actual work, rather than the reference's fantasy-quest
-skin.
-
-- **Color** — `ink` (#0B0F1A background family), `brass` (#D9A54A, primary accent),
-  `signal` (#6FCF97, status indicator), `wire` (#6C93C7, links). One accent used sparingly,
-  everything else neutral, per `tailwind.config.ts`.
-- **Type** — Fraunces (display serif, used only for names/headings), IBM Plex Sans (body),
-  IBM Plex Mono (labels, dates, tags, nav) — a three-tier system distinct from the reference's
-  faces.
-- **Spacing/layout** — single centered content rail (`max-w-rail` = 960px), ~100px vertical
-  rhythm between sections, dense card padding.
-- **Signature interaction** — the hero's role line is a typewriter effect cycling through
-  three descriptors, and the Field Log section uses real click-to-expand tabs (state in
-  `Timeline.tsx`) rather than a static list.
-- **Motion** — `Reveal.tsx` wraps sections in a `framer-motion` `whileInView` fade/rise;
-  project cards get a subtle cursor-tracked 3D tilt; a scroll progress bar runs along the
-  top edge.
-- **Accessibility** — visible focus rings (`index.css`), `prefers-reduced-motion` respected,
-  semantic headings throughout.
+Pushes to `main` are deployed to GitHub Pages by `.github/workflows/deploy.yml`.
 
 ## Structure
 
 ```
 src/
-  components/   Nav, Hero, Profile, Timeline, Work, Gallery, Contact, Reveal, ScrollProgress
-  hooks/        useScrollProgress, useActiveSection, useTypewriter
-  data/         content.ts — all real content lives here, typed via types.ts
+  components/   Hero, Profile (About), Timeline (Experience), Work (Projects), Contact, Nav,
+                SketchWorld (three.js sketches), PaperTear (WebGL torn paper), Reveal
+  data/         content.ts — all text content: bio, education, skills, experience, projects, links
+  lib/          sketch.ts (line drawings), sections.ts, webgl.ts
+  hooks/        smooth scrolling, active section, scroll progress
 public/
-  profile.jpg, resume.pdf
+  profile.PNG, resume.pdf
 ```
 
-To update content (experience, projects, skills, links), edit `src/data/content.ts` only —
-no component changes needed for new entries.
+To update content (projects, skills, achievements, links), edit `src/data/content.ts`. No component
+changes are needed for new entries. Experience entries are in `src/components/Timeline.tsx`.
+
+## Stack
+
+React 18 · TypeScript · Vite · Tailwind CSS · three.js · Framer Motion · Lenis
+
+Type: Fraunces (display), IBM Plex Sans (body), IBM Plex Mono (labels).
